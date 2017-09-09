@@ -6,12 +6,12 @@
 * int getNum();
 * bool getState();
 
-## snackQueue
+## SerpQueue
 * void add();
 * bool isfull();
 * int getNum();
 
-## restArea
+## RestArea
 * int getNum();
 * void add(int num);
 
