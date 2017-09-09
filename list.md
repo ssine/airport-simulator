@@ -31,4 +31,5 @@
 # function
 * int distribution();
 * void readSettingFile();
+* void writeSettingFile();
 * void writeLog();
