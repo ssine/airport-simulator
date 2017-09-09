@@ -13,6 +13,15 @@ struct passenger
     int arrTime, checkTime;
     passenger();
 };
+//random event
+struct Entry
+{
+    int no;
+    int sec;
+    char type;
+    int mans;
+    int check;
+};
 
 time_t getTime()
 {
