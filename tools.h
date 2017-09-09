@@ -45,5 +45,37 @@ void writeSettingFile()
     delete a;
 }
 
+void romdomWriteInputFile()
+{
+    std::ofstream fin("input.dat",std::ios::binary);
+    Entry *en=new Entry[100];
+    srand((unsigned)time(NULL));
+    for(int i=0; i<100; i++)
+    {
+        en[i].no=i;
+        en[i].sec=rand()%300;
+        int temp=rand()%3;
+        if(temp==0)
+            en[i].type='C';
+        else if(temp==1)
+            en[i].type='X';
+        else
+            en[i].type='Q';
+        en[i].mans=rand()%10;
+        en[i].check=rand()%MaxCheck;
+    }
+    fin.write((char*)en,sizeof(en));
+    fin.close();
+    delete en;
+}
+
+void readInputFile(Entry *en)
+{
+    std::ifstream fin("input.dat",std::ios::binary);
+    fin.read((char*)en,sizeof(en));
+    fin.close();
+}
+
+
 
 #endif
