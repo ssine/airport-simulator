@@ -20,7 +20,10 @@
 * void auto_stop();
 * void addSingle(int num=1);
 * void add(int num);
-* void fileRead();
+* void setRestArea(RestArea *p);
+* void setInterval(time_t ti);//设置间隔
+* time_t getInterval();
+* void setGauss(int m,int v);//设置均值方差
 
 # struct
 * Passenger
