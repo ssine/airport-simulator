@@ -33,7 +33,20 @@ class PassengerGenerator
 private:
     int m_AutoSwitch;
     RestArea *RestPoint=NULL;
+    int m_maxid=0;
     time_t interval=1000;
+    void addPassenger(int num)
+    {
+       srand((unsigned)time(NULL));
+        int id,arrTime,checkTime;
+        for(int i=0;i<num;i++)
+        {
+            id=m_maxid++;
+            arrTime=rand()%300;
+            checkTime=rand()%10;
+            RestPoint->addPassenger(id,arriveTime,checkTime,"laowang");
+        }
+    }
 public:
     //高斯分布自动生成,参数为均值，方差
     void gauss(int mean=5,int variance=2)
@@ -44,7 +57,7 @@ public:
         while(m_AutoSwitch)
         {
             Sleep(interval);
-            RestPoint->add(normal(gen));
+            addPassenger(normal(gen));
         }
     }
     //设置与休息区的链接，传入指针
@@ -63,11 +76,11 @@ public:
     }
     void addSingle()
     {
-        RestPoint->add(1);
+        addPassenger(1);
     }
     void add(int num)
     {
-        RestPoint->add(num);
+        addPassenger(num);
     }
     //设置发生间隔
     void setInterval(time_t ti)
