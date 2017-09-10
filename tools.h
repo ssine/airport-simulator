@@ -76,6 +76,16 @@ void readInputFile(Entry *en)
     fin.close();
 }
 
+void clearLogFile()
+{
+    std::fstream fout("Log.txt");
+    fout<<"Log"<<std::endl;
+}
 
+void writeLogFile(string s)
+{
+    std::fstream fout("Log.txt",std::ios::app);
+    fout<<s;
+}
 
 #endif
