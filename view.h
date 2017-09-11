@@ -6,8 +6,8 @@
 #include <cmath>
 
 // 窗口宽高
-const int windowWidth = 720;
-const int windowHeight = 480;
+const int windowWidth = 1366;
+const int windowHeight = 768;
 
 // 材质名字的枚举变量，实现动图的时候需要改
 enum texName;
@@ -30,7 +30,9 @@ public:
     Point pos;
     Point endPoint;
     bool needMove;
-    Passenger(float x=0, float y=0) {pos.x = x; pos.y = y; needMove = true;}
+    int texId;
+    Passenger();
+    Passenger(float x, float y);
 };
 
 // 驱动函数
@@ -43,6 +45,7 @@ void drawInit();
 */
 // 从文件读取材质
 void loadTexture();
+void loadPassengerTex();
 
 // 什么也不做的咸鱼函数
 void display();
@@ -53,6 +56,8 @@ void onEscPressed(unsigned char key, int x, int y);
 
 // 工具函数：
 void drawObject(texName, Point&, float, float);
+void drawPassenger(Passenger& p);
+void drawSerpQueue();
 void flush(int value);
 
 

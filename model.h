@@ -1,5 +1,6 @@
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
+
 #include<bits/stdc++.h>
 using namespace std;
 
