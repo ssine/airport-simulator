@@ -4,61 +4,47 @@
 #include <SOIL.h>
 #include <GL/glut.h>
 #include <cmath>
+#include "struct.h"
 
-// ´°¿Ú¿í¸ß
+// çª—å£å®½é«˜
 const int windowWidth = 1366;
 const int windowHeight = 768;
 
-// ²ÄÖÊÃû×ÖµÄÃ¶¾Ù±äÁ¿£¬ÊµÏÖ¶¯Í¼µÄÊ±ºòĞèÒª¸Ä
+// æè´¨åå­—çš„æšä¸¾å˜é‡ï¼Œå®ç°åŠ¨å›¾çš„æ—¶å€™éœ€è¦æ”¹
 enum texName;
 
-// µã£¬ÖØÔØÁËÄ¬ÈÏ¡¢¸´ÖÆ¹¹Ôì£¬norm·µ»ØÁ½µã¼äÅ·ÊÏ¾àÀë
-struct Point {
-    float x, y;
-    Point();
-    Point(float a, float b);
-    Point(const Point& p);
-    Point& operator = (const Point& p);
-    inline static float Point::norm(const Point& a, const Point& b) {
-        return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
-    }
-};
 
-// ²âÊÔÓÃÀà
-class Passenger {
-public:
-    Point pos;
-    Point endPoint;
-    bool needMove;
-    int texId;
-    Passenger();
-    Passenger(float x, float y);
-};
+// å·¥å…·
+inline float sym(float a, float b);
 
-// Çı¶¯º¯Êı
-void show(int argc, char *argv[]);
+// é©±åŠ¨
+void show();
 
 void drawInit();
-/* »æÍ¼Ç°³õÊ¼»¯º¯Êı£º
-    ÉèÖÃ±³¾°
-    ÔØÈë²ÄÖÊ
+/* ç»˜å›¾å‰åˆå§‹åŒ–å‡½æ•°ï¼š
+    è®¡ç®—å¿…è¦çš„å€¼
+    è½½å…¥æè´¨
+    è®¾ç½®é”®é¼ å›è°ƒ
 */
-// ´ÓÎÄ¼ş¶ÁÈ¡²ÄÖÊ
-void loadTexture();
-void loadPassengerTex();
+void genRoute();
 
-// Ê²Ã´Ò²²»×öµÄÏÌÓãº¯Êı
-void display();
-
-// ¼üÊó½»»¥»Øµ÷º¯Êı
-void onEscPressed(unsigned char key, int x, int y);
-
-
-// ¹¤¾ßº¯Êı£º
+// ç»˜å›¾
 void drawObject(texName, Point&, float, float);
 void drawPassenger(Passenger& p);
 void drawSerpQueue();
 void flush(int value);
+
+
+// ä»æ–‡ä»¶è¯»å–æè´¨
+void loadTexture();
+void loadPassengerTex();
+
+// ä»€ä¹ˆä¹Ÿä¸åšçš„å’¸é±¼å‡½æ•°
+void display();
+
+// é”®é¼ äº¤äº’å›è°ƒå‡½æ•°
+void onEscPressed(unsigned char key, int x, int y);
+
 
 
 #endif

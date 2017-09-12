@@ -1,139 +1,111 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "view.h"
+#include "struct.h"
 #include <iostream>
 #include <cstdio>
 #include <vector>
 #include <cmath>
 #include <cstdlib>
+#include <string>
 
 using std::cout;
 using std::endl;
 
-// ´°¿ÚÃû³Æ
-const char* windowTitle = "²âÊÔÑùÀı";
+// çª—å£åç§°
+const char* windowTitle = "æµ‹è¯•æ ·ä¾‹";
 
-// texWidth[texName] ÎªÔ¤ÉèµÄ¿í¸ß
-enum texName { _passenger, _checkPoint, _serpQueueLeft, _serpQueueRight, _serpQueueDown, _restArea };
-float texWidth[20] = {0.15, 0.5, 1.35, 1.35, 1.4, 1.7};
-float texHeight[20] = {0.3, 0.5, 0.5, 0.5, 0.7, 0.5};
+// Texutreæè´¨ç®¡ç†
+enum texName { _passenger, _checkPoint, _serpQueueLeft, _serpQueueRight, _serpQueueDownL, _serpQueueDownU, _restArea };
 int texId[100];
-int passengerTexArea = 50;
-int passengerTexMax = 5;
 
-// ¶¯»­²½³¤
+// passengerè·¯å¾„ç‚¹
+std::vector<Point> route;
+int passengerPerLine = 20, passengerPerSkew = 2; // æ¯æ’&æ¯æ–œçº¿äººæ•°
+// passengerçº¹ç†æ€»æ•°
+int passengerTexNum = 5;
+
+// åŠ¨ç”»æ­¥é•¿
 float step = 0.005;
-// ¾àÀëÖÕµã¶àÔ¶Ê±Í£Ö¹
+// è·ç¦»ç»ˆç‚¹å¤šè¿œæ—¶åœæ­¢
 float stopEps = 0.01;
 
-// ¿ØÖÆFPS
+// æ§åˆ¶FPS
 int FPS = 30;
 int timeInterval;
 
-// ²âÊÔÓÃ
+// æµ‹è¯•ç”¨
 std::vector<Passenger> q;
 
 
-void show(int argc, char *argv[]) {
-    //glutÉè¶¨
-    glutInitWindowPosition(100, 100);
+
+// ç»˜å›¾å„é¡¹å‚æ•°
+float alp = 1.5, alph = 1.2; // è›‡å½¢é˜Ÿåˆ— å•ä½å®½åº¦ & é«˜åº¦ä¿®æ­£é‡
+float lmd;
+
+// è›‡å½¢é˜Ÿåˆ—çš„å„é¡¹æ•°å€¼â€¦â€¦è¯·æ— è§†
+float SQX = -1.0, SQY = -1.0;
+int sqdw = 1289, sqdh = 256, sqlrw = 1243, sqlrh = 165;
+int dltx = 135, dltx_ = 87, dlty = 167, dlty_ = 76;
+float SQDW, SQDH, SQLRW, SQLRH;
+float SQdX, SQdY, SQdX_, SQdY_;
+
+
+
+void show() {
+	int initint = 1;
+	char* s = "main";
+	char* initchar[] = {s};
+    //glutè®¾å®š
+    glutInitWindowPosition(50, 10);
     glutInitWindowSize(windowWidth, windowHeight);
-    glutInit(&argc, argv);
+    glutInit(&initint, initchar);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutCreateWindow(windowTitle);
-    // ¶ÁÈ¡²ÄÖÊ
-    loadTexture();
     
-    //³õÊ¼»¯
+    //åˆå§‹åŒ–
     drawInit();
     
-    //³õÊ¼»æÍ¼º¯Êı
+    //åˆå§‹ç»˜å›¾å‡½æ•°
     glutDisplayFunc(display);
     flush(1);
     
-    //½øÈëÖ÷Ñ­»·
+    //è¿›å…¥ä¸»å¾ªç¯
     glutMainLoop();
 }
 
-void display() { } // ÔÚ´°¿Ú¸Ä±ä´óĞ¡Ê±µ÷ÓÃ£¬²»Áé»î£¬ÏÈ²»ÓÃÁË
-
 void drawInit() {
+    // å¿…è¦çš„æ•°å€¼è®¡ç®—
+    lmd = alp / sqdw;
+    cout << lmd << endl;
+    SQDW=lmd*sqdw, SQDH=lmd*sqdh*alph, SQLRW=lmd*sqlrw, SQLRH=lmd*sqlrh*alph;
+    SQdX=lmd*dltx, SQdY=lmd*dlty*alph, SQdX_=lmd*dltx_, SQdY_=lmd*dlty_*alph;
+
+    // è¯»å–æè´¨
+    loadTexture();
+
+    // ç”Ÿæˆä¹˜å®¢è·¯å¾„ç‚¹
+    genRoute();
 
     q.push_back(Passenger());
     q.push_back(Passenger(0.3, 0));
     q[0].endPoint = Point::Point(0, 0.7);
     q[1].endPoint = Point::Point(0.7, 0);
-
     srand(20);
-    // Éè¶¨¿Õ°×É«
+
+    // è®¾å®šç©ºç™½è‰²
     glClearColor(0.796875, 0.59765625, 1.0, 1.0);
-    
-    // ²âÊÔ»Øµ÷º¯Êı
+
+    // æµ‹è¯•å›è°ƒå‡½æ•°
     glutKeyboardFunc(onEscPressed);
-    // ¼ÆËãTimerÊ±¼ä
+    // è®¡ç®—Timeræ—¶é—´
     timeInterval = 1000 / FPS;
 }
 
 
-void drawObject(texName name, Point& pos, float width=0.0, float height=0.0) {
-/* ÒÑ·â×°ºÃ£¬´«ÈëÃû×Ö»­³ö¶ÔÓ¦¶ÔÏó£¬²ÎÊı1Ãû×Ö 2Î»ÖÃ 34¿í¸ß(ÎŞÔòÊ¹ÓÃÔ¤Éè) */
-
-    glEnable(GL_TEXTURE_2D);//Í¼ÏñÓĞĞ§»¯
-    glBindTexture( GL_TEXTURE_2D, texId[name] );
-    if(width < 0.001) width = texWidth[name];
-    if(height < 0.001) height = texHeight[name];
-    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
-    glEnable(GL_ALPHA_TEST);//ÊÔÃè»­¿ªÊ¼
-    glAlphaFunc(GL_GREATER, 0.5);
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y);//×óÏÂ
-	glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y + height);//×óÉÏ
-	glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + width, pos.y + height);//ÓÒÉÏ
-	glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + width, pos.y);//ÓÒÏÂ
-	glEnd();
-	glDisable(GL_ALPHA_TEST);//ÊÔÃè»­½áÊø
-    glDisable(GL_TEXTURE_2D);//Í¼ÏñÎŞĞ§
-}
-
-void drawPassenger(Passenger& p) {
-    glEnable(GL_TEXTURE_2D);//Í¼ÏñÓĞĞ§»¯
-    glBindTexture( GL_TEXTURE_2D, p.texId );
-    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
-    glEnable(GL_ALPHA_TEST);//ÊÔÃè»­¿ªÊ¼
-    glAlphaFunc(GL_GREATER, 0.5);
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0f, 0.0f); glVertex2f(p.pos.x, p.pos.y);//×óÏÂ
-	glTexCoord2f(0.0f, 1.0f); glVertex2f(p.pos.x, p.pos.y + texHeight[0]);//×óÉÏ
-	glTexCoord2f(1.0f, 1.0f); glVertex2f(p.pos.x + texWidth[0], p.pos.y + texHeight[0]);//ÓÒÉÏ
-	glTexCoord2f(1.0f, 0.0f); glVertex2f(p.pos.x + texWidth[0], p.pos.y);//ÓÒÏÂ
-	glEnd();
-	glDisable(GL_ALPHA_TEST);//ÊÔÃè»­½áÊø
-    glDisable(GL_TEXTURE_2D);//Í¼ÏñÎŞĞ§
-}
-
-void drawSerpQueue() {
-    drawObject(_serpQueueLeft, Point(-0.6,-0.35));
-    drawObject(_serpQueueDown, Point(-0.75,-0.75));
-
-}
-
-// ¼üÊó²Ù×÷»Øµ÷º¯Êı
-void onEscPressed(unsigned char key, int x, int y) {
-    if(key == 27) glutHideWindow();
-}
-
-
-// ¸¨Öú»æÍ¼
-inline float sym(float a, float b) {
-    if(std::abs(a - b) < stopEps) return 0.0f;
-    else if(a - b > 0) return -1.0f;
-    else return 1.0f;
-}
-// Ã¿Ò»Ö¡µÄ»æÍ¼º¯Êı
+// æ¯ä¸€å¸§çš„ç»˜å›¾å‡½æ•°
 void flush(int value) {
     glutTimerFunc(timeInterval, flush, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //cout << "flushing..." << endl;
 
     drawSerpQueue();
 
@@ -144,78 +116,192 @@ void flush(int value) {
             if(Point::norm(q[i].pos, q[i].endPoint) < stopEps) q[i].needMove = false;
         }
         drawPassenger(q[i]);
-        //cout << "drawn " << endl;
     }
 
     glutSwapBuffers();
 }
 
 
+// ç»˜åˆ¶è›‡å½¢é˜Ÿåˆ—
+void drawSerpQueue() {
+    drawObject(_serpQueueLeft, Point(SQX+SQdX+2*SQdX_,SQY+SQdY+2*SQdY_), SQLRW, SQLRH);
+    int i = route.size()-1;
+    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--) 
+        drawObject(_checkPoint, route[i], 0.07, 0.25);
+    drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
+    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--) 
+        drawObject(_checkPoint, route[i], 0.07, 0.25);
+    drawObject(_serpQueueLeft, Point(SQX+SQdX,SQY+SQdY), SQLRW, SQLRH);
+    for(int j = 0; j < passengerPerLine + passengerPerSkew && i >= 0; j++, i--) 
+        drawObject(_checkPoint, route[i], 0.07, 0.25);
+    drawObject(_serpQueueDownU, Point(SQX,SQY), SQDW, SQDH);
+    while(i >= 0) {
+        drawObject(_checkPoint, route[i], 0.07, 0.25);
+        i--;
+    }
+    drawObject(_serpQueueDownL, Point(SQX,SQY), SQDW, SQDH);
+}
 
 
-// ¶ÁÈ¡²ÄÖÊ£¬ÒªÓÃGIFµÄ»°ĞèÒªÖØĞ´
+Point genSkew(Point base) {
+    Point step = Point(90/(passengerPerSkew+1)*lmd, 93/(passengerPerSkew+1)*lmd*alph);
+    for(int i = 1; i <= passengerPerSkew; i++) route.push_back(base + step*i);
+    return Point(base + step*(passengerPerSkew+1));
+}
+
+void genRoute() {
+    Point base(SQX + 88*lmd, SQY + 66*lmd);
+    float step = 1144*1.0/(passengerPerLine+1)*lmd;
+    cout << lmd;
+    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    base = genSkew(Point(base.x+(passengerPerLine-1)*step+step/2, base.y));
+    step = -step;
+    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    base = genSkew(Point(base.x+(passengerPerLine-1)*step+step/2, base.y));
+    step = -step;
+    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    base = genSkew(Point(base.x+(passengerPerLine-1)*step+step/2, base.y));
+    step = -step;
+    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+}
+
+
+
+
+
+
+
+void drawObject(texName name, Point& pos, float width=0.0, float height=0.0) {
+/* å·²å°è£…å¥½ï¼Œä¼ å…¥åå­—ç”»å‡ºå¯¹åº”å¯¹è±¡ï¼Œå‚æ•°1åå­— 2ä½ç½® 34å®½é«˜(æ— åˆ™ä½¿ç”¨é¢„è®¾) */
+
+    glEnable(GL_TEXTURE_2D);//å›¾åƒæœ‰æ•ˆåŒ–
+    glBindTexture( GL_TEXTURE_2D, texId[name] );
+    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
+    glEnable(GL_ALPHA_TEST);//è¯•æç”»å¼€å§‹
+    glAlphaFunc(GL_GREATER, 0.5);
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(pos.x, pos.y);//å·¦ä¸‹
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(pos.x, pos.y + height);//å·¦ä¸Š
+	glTexCoord2f(1.0f, 1.0f); glVertex2f(pos.x + width, pos.y + height);//å³ä¸Š
+	glTexCoord2f(1.0f, 0.0f); glVertex2f(pos.x + width, pos.y);//å³ä¸‹
+	glEnd();
+	glDisable(GL_ALPHA_TEST);//è¯•æç”»ç»“æŸ
+    glDisable(GL_TEXTURE_2D);//å›¾åƒæ— æ•ˆ
+}
+
+void drawPassenger(Passenger& p) {
+    glEnable(GL_TEXTURE_2D);//å›¾åƒæœ‰æ•ˆåŒ–
+    glBindTexture( GL_TEXTURE_2D, p.texId );
+    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
+    glEnable(GL_ALPHA_TEST);//è¯•æç”»å¼€å§‹
+    glAlphaFunc(GL_GREATER, 0.5);
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0.0f, 0.0f); glVertex2f(p.pos.x, p.pos.y);//å·¦ä¸‹
+	glTexCoord2f(0.0f, 1.0f); glVertex2f(p.pos.x, p.pos.y + 0.25);//å·¦ä¸Š
+	glTexCoord2f(1.0f, 1.0f); glVertex2f(p.pos.x + 0.08, p.pos.y + 0.25);//å³ä¸Š
+	glTexCoord2f(1.0f, 0.0f); glVertex2f(p.pos.x + 0.08, p.pos.y);//å³ä¸‹
+	glEnd();
+	glDisable(GL_ALPHA_TEST);//è¯•æç”»ç»“æŸ
+    glDisable(GL_TEXTURE_2D);//å›¾åƒæ— æ•ˆ
+}
+
+
+
+// é”®é¼ æ“ä½œå›è°ƒå‡½æ•°
+void onEscPressed(unsigned char key, int x, int y) {
+    if(key == 27) glutHideWindow();
+}
+
+
+// è¾…åŠ©ç»˜å›¾
+inline float sym(float a, float b) {
+    if(std::abs(a - b) < stopEps) return 0.0f;
+    else if(a - b > 0) return -1.0f;
+    else return 1.0f;
+}
+
+
+
+
+// è¯»å–æè´¨ï¼Œè¦ç”¨GIFçš„è¯éœ€è¦é‡å†™
 void loadTexture() {
     loadPassengerTex();
     texId[_checkPoint] = SOIL_load_OGL_texture(
         ".\\source\\checkPoint.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     texId[_serpQueueLeft] = SOIL_load_OGL_texture(
         ".\\source\\line_left.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     texId[_serpQueueRight] = SOIL_load_OGL_texture(
         ".\\source\\line_right.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
-    texId[_serpQueueDown] = SOIL_load_OGL_texture(
-        ".\\source\\line_down.png",
+    texId[_serpQueueDownL] = SOIL_load_OGL_texture(
+        ".\\source\\line_downl.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB 
+    );
+    texId[_serpQueueDownU] = SOIL_load_OGL_texture(
+        ".\\source\\line_downu.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB 
     );
     texId[_restArea] = SOIL_load_OGL_texture(
         ".\\source\\restArea.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
 }
 
 void loadPassengerTex() {
     char s[200];
-    for(int i = 1; i <= passengerTexMax; i++) {
+    for(int i = 1; i <= passengerTexNum; i++) {
         sprintf(s, ".\\source\\p%d.png", i);
-        cout << s << endl;
+        //cout << s << endl;
         int st = SOIL_load_OGL_texture(
             s,
             SOIL_LOAD_AUTO,
             i,
-            SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
         );
-        cout << st << endl;
+        //cout << st << endl;
     }
 }
 
-// µã½á¹¹ÌåµÄÊµÏÖ
+void display() { } // åœ¨çª—å£æ”¹å˜å¤§å°æ—¶è°ƒç”¨ï¼Œä¸çµæ´»ï¼Œå…ˆä¸ç”¨äº†
+
+// ç‚¹ç»“æ„ä½“çš„å®ç°
 Point::Point() { x = 0.0f; y = 0.0f; }
 Point::Point(float a, float b) : x(a), y(b) { }
 Point::Point(const Point& p) { x = p.x; y = p.y; }
 Point& Point::operator = (const Point& p) { x = p.x; y = p.y; return *this; }
+Point Point::operator + (const Point& p) { return Point(x + p.x, y + p.y); }
+Point Point::operator * (const float m) { return Point(x*m, y*m); }
 
 Passenger::Passenger(float x, float y) {
     pos.x = x; pos.y = y;
     needMove = true;
-    texId = int(rand()*1.0*passengerTexMax/RAND_MAX+1);
+    texId = int(rand()*1.0*passengerTexNum/RAND_MAX+1);
 }
 Passenger::Passenger() {
     pos.x = -1.0; pos.y = -1.0;
     needMove = true;
-    texId = int(rand()*1.0*passengerTexMax/RAND_MAX+1);
+    texId = int(rand()*1.0*passengerTexNum/RAND_MAX+1);
+}
+Passenger::Passenger(int id, int arriveTime, int checkTime, std::string name) {
+    this->id = id;
+    this->arriveTime = arriveTime;
+    this->checkTime = checkTime;
+    this->name = name;
 }

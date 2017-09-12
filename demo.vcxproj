@@ -139,12 +139,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="checkpoint.h" />
+    <ClInclude Include="function.h" />
+    <ClInclude Include="globalvar.h" />
+    <ClInclude Include="queue.h" />
+    <ClInclude Include="serpqueue.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="struct.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="checkpoint.cpp" />
     <ClCompile Include="demo.cpp" />
+    <ClCompile Include="function.cpp" />
+    <ClCompile Include="globalvar.cpp" />
+    <ClCompile Include="queue.cpp" />
+    <ClCompile Include="serpqueue.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
