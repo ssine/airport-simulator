@@ -28,9 +28,9 @@ CheckPoint CheckP[10];
 int main(int argc, char *argv[])
 {
 	thread t1(show);
-	t1.join();
+	t1.detach();
 	cout << "you see me?";
-	readSettingFile();
+	//readSettingFile();
 	for (int i = 0; i<MaxCheck; i++)
 	{
 		if (i<MinCheck)

@@ -18,6 +18,7 @@ extern int closed;
 // 打开动画
 extern bool aniWindow;
 
+
 // 材质名字的枚举变量，实现动图的时候需要改
 typedef enum textureName
 {
