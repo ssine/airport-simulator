@@ -8,7 +8,7 @@
 #include "struct.h"
 #include "globalvar.h"
 #include <Windows.h>
-extern const time_t T_UNIT;
+extern time_t t_unit;
 
 time_t getTime()
 {
@@ -180,6 +180,6 @@ void programEnd(CheckPoint CheckP[])
 		}
 		if (!sum)
 			exit(0);
-		Sleep(T_UNIT);
+		Sleep(t_unit);
 	}
 }
