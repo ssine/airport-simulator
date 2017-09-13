@@ -54,6 +54,9 @@
     <ClInclude Include="glyph.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="glyph.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

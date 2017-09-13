@@ -16,4 +16,7 @@ int offDuty = 1;
 int pause = 2;
 int closed = 3;
 
+// 打开动画
+bool aniWindow = false;
+
 //enum int {onDuty,offDuty,pause,closed};
