@@ -7,6 +7,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <string>
+#include <windows.h>
+#include "globalvar.h"
 
 #include "glyph.h"
 #include "passenger.h"
@@ -23,8 +25,16 @@ int curWindowHeight = 768;
 // 窗口名称
 const char* windowTitle = "测试样例";
 
+// 打开动画
+bool aniWindow = false;
+
 // Texutre材质管理
-enum texName { _passenger, _checkPoint, _serpQueueLeft, _serpQueueRight, _serpQueueDownL, _serpQueueDownU, _restArea };
+enum texName {
+    _passenger, _checkPoint, _serpQueueLeft, _serpQueueRight,
+    _serpQueueDownL, _serpQueueDownU, _restArea,
+    arrow_left_normal, arrow_left_pressed, arrow_right_normal, arrow_right_pressed,
+    button_normal, button_hover, button_pressed
+};
 int texId[100];
 
 std::vector<Point> route;
@@ -50,6 +60,13 @@ float SQDW, SQDH, SQLRW, SQLRH;
 float SQdX, SQdY, SQdX_, SQdY_;
 
 
+float varX = -0.5, varY = 0.5;
+float nameVarSpace = 0.4;
+float varListHeight = 0.2;
+
+void drawString(const char* str);
+void selectFont(int size, int charset, const char* face);
+
 
 void show() {
 	int initint = 1;
@@ -62,14 +79,14 @@ void show() {
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutCreateWindow(windowTitle);
     glutReshapeFunc(changeSize);
-    
+
     //初始化
     drawInit();
-    
+
     //初始绘图函数
     glutDisplayFunc(display);
-    flush(1);
-    
+    flush(0);
+
     //进入主循环
     glutMainLoop();
 }
@@ -102,20 +119,47 @@ void drawInit() {
 
 // 每一帧的绘图函数
 void flush(int value) {
-    glutTimerFunc(timeInterval, flush, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    drawSerpQueue();
+    if(value == 0) {
+        // 变量编辑
+        drawVars();
+    } else {
+        // 图形
+        drawSerpQueue();
 
-    Passenger p(10, 10);
-    p.move();
-    //cout << "moved " << p.pos.x << " " << p.pos.y << endl;
-    p.draw();
-    //cout << "drawn " << p.width << " " << p.height << endl;
+        Passenger p(10, 10);
+        p.move();
+        //cout << "moved " << p.pos.x << " " << p.pos.y << endl;
+        p.draw();
+        //cout << "drawn " << p.width << " " << p.height << endl;
 
-    // 移动队列中所有乘客并绘制
+        // 移动队列中所有乘客并绘制
+
+    }
 
     glutSwapBuffers();
+
+    if(aniWindow) glutTimerFunc(timeInterval, flush, 1);
+    else glutTimerFunc(timeInterval, flush, 0);
+}
+
+
+
+void drawVars() {
+    char s[100];
+    glColor3f(0.0f, 0.0f, 0.0f);     //设置字体颜色
+
+    glRasterPos2f(varX, varY);
+    sprintf(s, "MinCheck");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY);
+    sprintf(s, "%d", MinCheck);
+    drawString(s);   //输出的字符串
+
+
+    glRasterPos2f(varX, varY-varListHeight);
+    drawString("30");
 }
 
 
@@ -123,13 +167,13 @@ void flush(int value) {
 void drawSerpQueue() {
     drawObject(_serpQueueLeft, Point(SQX+SQdX+2*SQdX_,SQY+SQdY+2*SQdY_), SQLRW, SQLRH);
     int i = route.size()-1;
-    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--) 
+    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--)
         drawObject(_checkPoint, route[i], 0.07, 0.25);
     drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
-    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--) 
+    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--)
         drawObject(_checkPoint, route[i], 0.07, 0.25);
     drawObject(_serpQueueLeft, Point(SQX+SQdX,SQY+SQdY), SQLRW, SQLRH);
-    for(int j = 0; j < passengerPerLine + passengerPerSkew && i >= 0; j++, i--) 
+    for(int j = 0; j < passengerPerLine + passengerPerSkew && i >= 0; j++, i--)
         drawObject(_checkPoint, route[i], 0.07, 0.25);
     drawObject(_serpQueueDownU, Point(SQX,SQY), SQDW, SQDH);
     while(i >= 0) {
@@ -221,13 +265,13 @@ void loadTexture() {
         ".\\source\\line_downl.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB 
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     texId[_serpQueueDownU] = SOIL_load_OGL_texture(
         ".\\source\\line_downu.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB 
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     texId[_restArea] = SOIL_load_OGL_texture(
         ".\\source\\restArea.png",
@@ -249,6 +293,33 @@ void loadPassengerTex() {
             SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
         );
         //cout << st << endl;
+    }
+}
+
+void selectFont(int size, int charset, const char* face) {
+    HFONT hFont = CreateFontA(size, 0, 0, 0, FW_MEDIUM, 0, 0, 0,
+        charset, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+        DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, face);
+    HFONT hOldFont = (HFONT)SelectObject(wglGetCurrentDC(), hFont);
+    DeleteObject(hOldFont);
+}
+
+void drawString(const char* str) //屏幕显示字体
+{
+    selectFont(48, ANSI_CHARSET, "Comic Sans MS");
+    static int isFirstCall = 1;
+    static GLuint lists;
+
+    if (isFirstCall) {
+        isFirstCall = 0;
+        // 申请MAX_CHAR个连续的显示列表编号
+        lists = glGenLists(128);
+        // 把每个字符的绘制命令都装到对应的显示列表中
+        wglUseFontBitmaps(wglGetCurrentDC(), 0, 128, lists);
+    }
+    // 调用每个字符对应的显示列表，绘制每个字符
+    for (; *str != '\0'; ++str) {
+        glCallList(lists + *str);
     }
 }
 
