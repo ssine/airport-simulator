@@ -41,3 +41,8 @@ void CheckPoint::refreshPopTime() {
         nextPopTime=getTime()+getFirstPassenger().checkTime;
     }
 }
+
+void CheckPoint::shut()
+{
+    state=closed;
+}
