@@ -7,7 +7,8 @@
 #include "serpqueue.h"
 #include "struct.h"
 #include "globalvar.h"
-
+#include <Windows.h>
+extern const time_t T_UNIT;
 
 time_t getTime()
 {
@@ -112,13 +113,73 @@ void refreshCheckPoint(CheckPoint CheckP[])
 
             }
 }
+
 //开放或关闭窗口 1开-1关0不动
-int switchCheck(SerpQueue &SerpQ,const int nowCheckNum)
+int whetherSwitchCheckPoint(SerpQueue &SerpQ, const int nowCheckNum)
 {
-    int num=SerpQ.getNum()/nowCheckNum;
-    if(num>MaxCheck)
-        return 1;
-    if(num<EasySeqLen)
-        return -1;
-    return 0;
+	int num = SerpQ.getNum() / nowCheckNum;
+	if (num>MaxCheck)
+		return 1;
+	if (num<EasySeqLen)
+		return -1;
+	return 0;
+}
+
+int getCheckNum(CheckPoint CheckP[])
+{
+	int num = 0;
+	for (int i = 0; i<MaxCheck; i++)
+	{
+		if (CheckP[i].getState() == onDuty)
+			num++;
+	}
+	return num;
+}
+
+void makeSwitchCheckPoint(CheckPoint CheckP[], int op)
+{
+	if (op == 1)
+	{
+		for (int i = MinCheck - 1; i<MaxCheck; i++)
+		{
+			if (CheckP[i].getState() == closed)
+			{
+				CheckP[i].start();
+				//cout << i << "is start" << endl;
+				return;
+			}
+		}
+	}
+	if (op == -1)
+	{
+		for (int i = MaxCheck - 1; i >= MinCheck; i--)
+		{
+			if (CheckP[i].getState() == onDuty)
+			{
+				CheckP[i].shut();
+				//cout << i << "is shut" << endl;
+				return;
+			}
+		}
+	}
+	return;
+}
+
+void programEnd(CheckPoint CheckP[])
+{
+	for (int i = 0; i<MaxCheck; i++)
+	{
+		CheckP[i].shut();
+	}
+	int sum = 0;
+	while (true)
+	{
+		for (int i = 0; i<MaxCheck; i++)
+		{
+			sum += CheckP[i].getNum();
+		}
+		if (!sum)
+			exit(0);
+		Sleep(T_UNIT);
+	}
 }
