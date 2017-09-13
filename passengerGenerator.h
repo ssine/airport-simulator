@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include "queue.h"
 #include "globalvar.h"
+#include "stdafx.h"
+
 
 class PassengerGenerator
 {

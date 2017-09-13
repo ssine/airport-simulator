@@ -1,3 +1,9 @@
+
+#include <random>
+#include <ctime>
+#include <Windows.h>
+#include "queue.h"
+#include "globalvar.h"
 #include "stdafx.h"
 #include "passengerGenerator.h"
 
@@ -47,7 +53,7 @@ void PassengerGenerator::add(int num)
 {
 	addPassenger(num);
 }
-//设置发生间隔
+//脡猫脰脙路垄脡煤录盲赂么
 void PassengerGenerator::setInterval(time_t ti)
 {
 	interval = ti;
