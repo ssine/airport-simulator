@@ -4,6 +4,7 @@
 #include <string>
 #include "queue.h"
 #include "struct.h"
+#include "passenger.h"
 #include "globalvar.h"
 
 Passenger Queue::operator[](int n) {
@@ -15,8 +16,8 @@ void Queue::addPassenger(Passenger pass) {
     std::cout<<"***"<<q.size()<<std::endl;
 }
 
-void Queue::addPassenger(int id, int arriveTime, int checkTime, std::string name) {
-    Passenger pass{id, arriveTime, checkTime, name};
+void Queue::addPassenger(int arriveTime, int checkTime) {
+    Passenger pass(arriveTime, checkTime);
     q.push_back(pass);
 }
 

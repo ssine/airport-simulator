@@ -16,7 +16,7 @@ void PassengerGenerator::addPassenger(int num)
 		id = m_maxid++;
 		arrTime = rand() % 300;
 		checkTime = rand() % MaxSec * 5;
-		RestPoint->addPassenger(id, arrTime, checkTime, "laowang");
+		RestPoint->addPassenger(arrTime, checkTime);
 	}
 }
 
@@ -53,7 +53,7 @@ void PassengerGenerator::add(int num)
 {
 	addPassenger(num);
 }
-//设置发生间隔
+//脡猫脰脙路垄脡煤录盲赂么
 void PassengerGenerator::setInterval(time_t ti)
 {
 	interval = ti;

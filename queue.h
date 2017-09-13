@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 #include "struct.h"
+#include "passenger.h"
 
 class Queue {
 public:
-    void addPassenger(int id, int arriveTime, int checkTime, std::string name);  //添加乘客
+    void addPassenger(int arriveTime, int checkTime);  //添加乘客
     void addPassenger(Passenger p);
     void popPassenger();  //乘客出队
     Passenger getFirstPassenger(); //即将出队的乘客

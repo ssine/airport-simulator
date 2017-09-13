@@ -143,6 +143,7 @@
     <ClInclude Include="checkpoint.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="globalvar.h" />
+    <ClInclude Include="passenger.h" />
     <ClInclude Include="passengerGenerator.h" />
     <ClInclude Include="queue.h" />
     <ClInclude Include="serpqueue.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="function.cpp" />
     <ClCompile Include="globalvar.cpp" />
+    <ClCompile Include="passenger.cpp" />
     <ClCompile Include="passengerGenerator.cpp" />
     <ClCompile Include="queue.cpp" />
     <ClCompile Include="serpqueue.cpp" />

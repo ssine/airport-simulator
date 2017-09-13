@@ -8,8 +8,17 @@
 #include <cstdlib>
 #include <string>
 
+#include "glyph.cpp"
+#include "passenger.h"
+
 using std::cout;
 using std::endl;
+
+// 窗口宽高
+const int windowWidth = 1366;
+const int windowHeight = 768;
+int curWindowWidth = 1366;
+int curWindowHeight = 768;
 
 // 窗口名称
 const char* windowTitle = "测试样例";
@@ -18,24 +27,15 @@ const char* windowTitle = "测试样例";
 enum texName { _passenger, _checkPoint, _serpQueueLeft, _serpQueueRight, _serpQueueDownL, _serpQueueDownU, _restArea };
 int texId[100];
 
-// passenger路径点
 std::vector<Point> route;
 int passengerPerLine = 20, passengerPerSkew = 2; // 每排&每斜线人数
 // passenger纹理总数
 int passengerTexNum = 5;
 
-// 动画步长
-float step = 0.005;
-// 距离终点多远时停止
-float stopEps = 0.01;
 
 // 控制FPS
 int FPS = 30;
 int timeInterval;
-
-// 测试用
-std::vector<Passenger> q;
-
 
 
 // 绘图各项参数
@@ -61,6 +61,7 @@ void show() {
     glutInit(&initint, initchar);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutCreateWindow(windowTitle);
+    glutReshapeFunc(changeSize);
     
     //初始化
     drawInit();
@@ -86,10 +87,7 @@ void drawInit() {
     // 生成乘客路径点
     genRoute();
 
-    q.push_back(Passenger());
-    q.push_back(Passenger(0.3, 0));
-    q[0].endPoint = Point::Point(0, 0.7);
-    q[1].endPoint = Point::Point(0.7, 0);
+
     srand(20);
 
     // 设定空白色
@@ -109,14 +107,13 @@ void flush(int value) {
 
     drawSerpQueue();
 
-    for(int i = 0; i < q.size(); i++) {
-        if(q[i].needMove) {
-            q[i].pos.x += sym(q[i].pos.x, q[i].endPoint.x) * step;
-            q[i].pos.y += sym(q[i].pos.y, q[i].endPoint.y) * step;
-            if(Point::norm(q[i].pos, q[i].endPoint) < stopEps) q[i].needMove = false;
-        }
-        drawPassenger(q[i]);
-    }
+    Passenger p(10, 10);
+    p.move();
+    //cout << "moved " << p.pos.x << " " << p.pos.y << endl;
+    p.draw();
+    //cout << "drawn " << p.width << " " << p.height << endl;
+
+    // 移动队列中所有乘客并绘制
 
     glutSwapBuffers();
 }
@@ -167,10 +164,6 @@ void genRoute() {
 
 
 
-
-
-
-
 void drawObject(texName name, Point& pos, float width=0.0, float height=0.0) {
 /* 已封装好，传入名字画出对应对象，参数1名字 2位置 34宽高(无则使用预设) */
 
@@ -189,24 +182,6 @@ void drawObject(texName name, Point& pos, float width=0.0, float height=0.0) {
     glDisable(GL_TEXTURE_2D);//图像无效
 }
 
-void drawPassenger(Passenger& p) {
-    glEnable(GL_TEXTURE_2D);//图像有效化
-    glBindTexture( GL_TEXTURE_2D, p.texId );
-    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
-    glEnable(GL_ALPHA_TEST);//试描画开始
-    glAlphaFunc(GL_GREATER, 0.5);
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0f, 0.0f); glVertex2f(p.pos.x, p.pos.y);//左下
-	glTexCoord2f(0.0f, 1.0f); glVertex2f(p.pos.x, p.pos.y + 0.25);//左上
-	glTexCoord2f(1.0f, 1.0f); glVertex2f(p.pos.x + 0.08, p.pos.y + 0.25);//右上
-	glTexCoord2f(1.0f, 0.0f); glVertex2f(p.pos.x + 0.08, p.pos.y);//右下
-	glEnd();
-	glDisable(GL_ALPHA_TEST);//试描画结束
-    glDisable(GL_TEXTURE_2D);//图像无效
-}
-
-
-
 // 键鼠操作回调函数
 void onEscPressed(unsigned char key, int x, int y) {
     if(key == 27) glutHideWindow();
@@ -214,14 +189,12 @@ void onEscPressed(unsigned char key, int x, int y) {
 
 
 // 辅助绘图
-inline float sym(float a, float b) {
-    if(std::abs(a - b) < stopEps) return 0.0f;
-    else if(a - b > 0) return -1.0f;
-    else return 1.0f;
+
+
+
+int getPassengerTexId() {
+    return int(rand()*1.0*passengerTexNum/RAND_MAX+1);
 }
-
-
-
 
 // 读取材质，要用GIF的话需要重写
 void loadTexture() {
@@ -280,6 +253,7 @@ void loadPassengerTex() {
 }
 
 void display() { } // 在窗口改变大小时调用，不灵活，先不用了
+void changeSize(int w, int h) {curWindowWidth = w; curWindowHeight = h;}
 
 // 点结构体的实现
 Point::Point() { x = 0.0f; y = 0.0f; }
@@ -288,20 +262,3 @@ Point::Point(const Point& p) { x = p.x; y = p.y; }
 Point& Point::operator = (const Point& p) { x = p.x; y = p.y; return *this; }
 Point Point::operator + (const Point& p) { return Point(x + p.x, y + p.y); }
 Point Point::operator * (const float m) { return Point(x*m, y*m); }
-
-Passenger::Passenger(float x, float y) {
-    pos.x = x; pos.y = y;
-    needMove = true;
-    texId = int(rand()*1.0*passengerTexNum/RAND_MAX+1);
-}
-Passenger::Passenger() {
-    pos.x = -1.0; pos.y = -1.0;
-    needMove = true;
-    texId = int(rand()*1.0*passengerTexNum/RAND_MAX+1);
-}
-Passenger::Passenger(int id, int arriveTime, int checkTime, std::string name) {
-    this->id = id;
-    this->arriveTime = arriveTime;
-    this->checkTime = checkTime;
-    this->name = name;
-}
