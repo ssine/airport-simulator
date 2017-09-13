@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "passengerGenerator.h"
 
 void PassengerGenerator::addPassenger(int num)
@@ -9,7 +10,7 @@ void PassengerGenerator::addPassenger(int num)
 		id = m_maxid++;
 		arrTime = rand() % 300;
 		checkTime = rand() % MaxSec * 5;
-		RestPoint->addPassenger(id, arrTime, checkTime, "laowang");
+		RestPoint->addPassenger(arrTime, checkTime);
 	}
 }
 
