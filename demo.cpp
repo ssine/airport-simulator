@@ -7,6 +7,7 @@
 #include <iostream>
 #include "view.h"
 
+#include <ctime>
 #include <thread>
 #include <windows.h>
 #include "checkpoint.h"
