@@ -13,6 +13,7 @@ extern const int windowWidth;
 extern const int windowHeight;
 extern int curWindowWidth;
 extern int curWindowHeight;
+extern bool aniWindow;
 
 // 材质名字的枚举变量，实现动图的时候需要改
 enum texName;
@@ -36,6 +37,7 @@ void drawInit();
 void genRoute();
 
 // 绘图
+void drawVars();
 void drawObject(texName, Point&, float, float);
 void drawSerpQueue();
 void flush(int value);
