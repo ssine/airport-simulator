@@ -156,10 +156,60 @@ void drawVars() {
     glRasterPos2f(varX + nameVarSpace, varY);
     sprintf(s, "%d", MinCheck);
     drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-2*varListHeight);
+    sprintf(s, "MaxCheck");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-2*varListHeight);
+    sprintf(s, "%d", MaxCheck);
+    drawString(s);   //输出的字符串
+    
+    glRasterPos2f(varX, varY-3*varListHeight);
+    sprintf(s, "MaxCustSingleLine");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace,varY-3*varListHeight);
+    sprintf(s, "%d", MaxCustSingleLine);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-4*varListHeight);
+    sprintf(s, "MaxLines");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-4*varListHeight);
+    sprintf(s, "%d", MaxLines);
+    drawString(s);   //输出的字符串
+
+    glRasterPos2f(varX, varY-4*varListHeight);
+    sprintf(s, "MaxSeqLen");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-4*varListHeight);
+    sprintf(s, "%d", MaxSeqLen);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-5*varListHeight);
+    sprintf(s, "EasySeqLen");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-5*varListHeight);
+    sprintf(s, "%d", EasySeqLen);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-6*varListHeight);
+    sprintf(s, "MaxCustCheck");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-6*varListHeight);
+    sprintf(s, "%d", MaxCustCheck);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-7*varListHeight);
+    sprintf(s, "MaxSec");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-7*varListHeight);
+    sprintf(s, "%d", MaxSec);
+    drawString(s);   //输出的字符串
+	
 
 
-    glRasterPos2f(varX, varY-varListHeight);
-    drawString("30");
+    //glRasterPos2f(varX, varY-varListHeight);
+    //drawString("30");
 }
 
 
