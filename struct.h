@@ -11,7 +11,6 @@ struct Entry
     int check;
 };
 
-// 点，重载了默认、复制构造，norm返回两点间欧氏距离
 struct Point {
     float x, y;
     Point();
@@ -23,18 +22,5 @@ struct Point {
     inline static float Point::norm(const Point& a, const Point& b) {
         return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
     }
-};
-
-struct Passenger {
-    int id;
-    int arriveTime, checkTime;
-    std::string name;
-    Point pos;
-    Point endPoint;
-    bool needMove;
-    int texId;
-    Passenger();
-    Passenger(float x, float y);
-    Passenger(int id, int arriveTime, int checkTime, std::string name);
 };
 

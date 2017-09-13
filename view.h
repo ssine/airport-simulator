@@ -4,18 +4,25 @@
 #include <SOIL.h>
 #include <GL/glut.h>
 #include <cmath>
+#include <vector>
 #include "struct.h"
+#include "passenger.h"
 
 // 窗口宽高
-const int windowWidth = 1366;
-const int windowHeight = 768;
+extern const int windowWidth;
+extern const int windowHeight;
+extern int curWindowWidth;
+extern int curWindowHeight;
 
 // 材质名字的枚举变量，实现动图的时候需要改
 enum texName;
 
+// 乘客路径点
+extern std::vector<Point> route;
 
 // 工具
 inline float sym(float a, float b);
+int getPassengerTexId();
 
 // 驱动
 void show();
@@ -30,10 +37,8 @@ void genRoute();
 
 // 绘图
 void drawObject(texName, Point&, float, float);
-void drawPassenger(Passenger& p);
 void drawSerpQueue();
 void flush(int value);
-
 
 // 从文件读取材质
 void loadTexture();
@@ -41,6 +46,7 @@ void loadPassengerTex();
 
 // 什么也不做的咸鱼函数
 void display();
+void changeSize(int w, int h);
 
 // 键鼠交互回调函数
 void onEscPressed(unsigned char key, int x, int y);
