@@ -11,10 +11,14 @@ void CheckPoint::start() {
     }
 }
 
-void CheckPoint::pause() {
-    if(state != offDuty && state != closed) {
-        state = onDuty;
-    }
+void CheckPoint::pause(int pauseTime)
+{
+	if (state != offDuty && state != closed)
+	{
+		state = offDuty;
+		nextPopTime += pauseTime;
+		pauseEndTime = getTime() + pauseTime;
+	}
 }
 
 bool CheckPoint::isFull() {

@@ -16,4 +16,4 @@ int offDuty = 1;
 int pause = 2;
 int closed = 3;
 
-//enum stateOfCheckPoint {onDuty,offDuty,pause,closed};
+//enum int {onDuty,offDuty,pause,closed};
