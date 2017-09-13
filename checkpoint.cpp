@@ -11,7 +11,13 @@ void CheckPoint::start() {
     }
 }
 
-void CheckPoint::pause(int pauseTime)
+void CheckPoint::toPause()
+{
+	if (state != offDuty && state != closed)
+		state = pause;
+}
+
+void CheckPoint::toPause(int pauseTime)
 {
 	if (state != offDuty && state != closed)
 	{

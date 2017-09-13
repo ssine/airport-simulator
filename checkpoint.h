@@ -6,7 +6,8 @@
 class CheckPoint : public Queue
 {
 public:
-    void pause(int pauseTime);  //暂停
+	void toPause();
+    void toPause(int pauseTime);  //暂停
     void start();  //开始
     int getState();   //获取安检口状态
     void setState(int s);
