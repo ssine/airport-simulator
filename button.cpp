@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "button.h"
+#include "function.h"
 #include "glyph.h"
 #include "view.h"
 #include <GL/glut.h>
@@ -36,9 +37,11 @@ void Button::mouseClick(int btn, int state, int x, int y) {
 			aniWindow = true;
 			cout << "changed" << endl;
 		} else if(texId == ::texId[arrow_left_normal] + 2) {
-            *corspVar -= 1;
-        } else if(texId == ::texId[arrow_left_normal] + 2) {
+            if(*corspVar > 1) *corspVar -= 1;
+            writeSettingFile();
+        } else if(texId == ::texId[arrow_right_normal] + 2) {
             *corspVar += 1;
+            writeSettingFile();
         }
     }
 }

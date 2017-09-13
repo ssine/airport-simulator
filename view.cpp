@@ -219,6 +219,23 @@ void initButton() {
         btnList.push_back(Button(varX+nameBtnSpace+nameBtnSpace2, varY-i*varListHeight-0.01, arrow_right_normal));
     }
     btnList.push_back(Button(0.5, -0.5, button_normal));
+    btnList[0].corspVar = &MinCheck;
+    btnList[1].corspVar = &MaxCheck;
+    btnList[2].corspVar = &MaxCustSingleLine;
+    btnList[3].corspVar = &MaxLines;
+    btnList[4].corspVar = &MaxSeqLen;
+    btnList[5].corspVar = &EasySeqLen;
+    btnList[6].corspVar = &MaxCustCheck;
+    btnList[7].corspVar = &MaxSec;
+    btnList[8].corspVar = &MinCheck;
+    btnList[9].corspVar = &MaxCheck;
+    btnList[10].corspVar = &MaxCustSingleLine;
+    btnList[11].corspVar = &MaxLines;
+    btnList[12].corspVar = &MaxSeqLen;
+    btnList[13].corspVar = &EasySeqLen;
+    btnList[14].corspVar = &MaxCustCheck;
+    btnList[15].corspVar = &MaxSec;
+
 }
 
 void drawButton() {

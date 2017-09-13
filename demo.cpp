@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
 	thread t1(show);
 	t1.join();
 	cout << "you see me?";
-	/*for (int i = 0; i<MaxCheck; i++)
+	readSettingFile();
+	for (int i = 0; i<MaxCheck; i++)
 	{
 		if (i<MinCheck)
 			CheckP[i].start();
@@ -66,6 +67,6 @@ int main(int argc, char *argv[])
 		int switchC = whetherSwitchCheckPoint(SerpQ, nowCheckNum);
 		makeSwitchCheckPoint(CheckP, switchC);
 		Sleep(t_unit);
-	}*/
+	}
 	return 0;
 }
