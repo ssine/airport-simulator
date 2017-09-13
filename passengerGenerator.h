@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include "queue.h"
 #include "globalvar.h"
+#include "stdafx.h"
+
 
 class PassengerGenerator
 {
@@ -14,7 +16,7 @@ private:
 	time_t interval = 1000;
 	void addPassenger(int num);
 	//高斯分布自动生成,参数为均值，方差
-	void gauss(int mean = 5, int variance = 2);
+	void gauss(int mean, int variance);
 public:
 	//设置与休息区的链接，传入指针
 	void setRestArea(RestArea *p);

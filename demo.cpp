@@ -33,7 +33,8 @@ int main(int argc, char *argv[])
 	{
 		if (i<MinCheck)
 			CheckP[i].start();
-		CheckP[i].shut();
+		else
+			CheckP[i].shut();
 	}
 	RestArea RestA;
 	SerpQueue SerpQ;

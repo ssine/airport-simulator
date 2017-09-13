@@ -1,3 +1,10 @@
+
+#include <random>
+#include <ctime>
+#include <Windows.h>
+#include "queue.h"
+#include "globalvar.h"
+#include "stdafx.h"
 #include "passengerGenerator.h"
 
 void PassengerGenerator::addPassenger(int num)
