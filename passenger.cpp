@@ -2,6 +2,8 @@
 #include "passenger.h"
 #include <cstdlib>
 #include "view.h"
+#include <iostream>
+using namespace std;
 
 float width = 0.08, height = 0.25;
 // 动画步长
@@ -25,12 +27,20 @@ Passenger::Passenger(int arriveTime, int checkTime) {
     texId = getPassengerTexId();
     this->width = ::width;
     this->height = ::height;
-    pos.x = pos.y = 0.0;
-    routeId = 0;
+    pos.x = pos.y = -1.0;
+    routeId = curFreeRtp;
 }
 
 void Passenger::move() {
+    //cout << routeId << endl;
+    pos = route[routeId];
+    cout <<routeId << "moved to " << pos.x << "." << pos.y << "this:" << this <<  endl;
+    /*
     pos.x += sym(pos.x, route[routeId].x) * step;
     pos.y += sym(pos.y, route[routeId].y) * step;
+    */
 }
 
+void Passenger::nextPoint() {
+    if(routeId > 0) routeId--;
+}

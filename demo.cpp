@@ -25,12 +25,21 @@ using namespace std;
 PassengerGenerator PassengerG;
 CheckPoint CheckP[10];
 
+
+void run();
+
 int main(int argc, char *argv[])
 {
 	thread t1(show);
 	t1.detach();
 	cout << "you see me?";
 	//readSettingFile();
+	while(!aniWindow) ;
+	run();
+	return 0;
+}
+
+void run() {
 	for (int i = 0; i<MaxCheck; i++)
 	{
 		if (i<MinCheck)
@@ -39,17 +48,20 @@ int main(int argc, char *argv[])
 			CheckP[i].shut();
 	}
 	RestArea RestA;
-	SerpQueue SerpQ;
+	
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
-		int c = rand() % 10;
+		int c = rand() % 30;
 		for (int i = 0; i<c; i++)
 			PassengerG.addSingle();
 			//休息区to蛇形队列
+		//cerr << RestA.isempty()<<endl;
 		while (!SerpQ.isFull() && !RestA.isempty())
 		{
+			//cerr <<"2"<< RestA.isempty() << endl;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
+			if(curFreeRtp < 40) curFreeRtp++;
 			RestA.popPassenger();
 		}
 		int checkId;
@@ -60,13 +72,16 @@ int main(int argc, char *argv[])
 		{
 			CheckP[checkId].addPassenger(SerpQ.getFirstPassenger());
 			//安检完就打死
+			cout << "***" << CheckP[0].getNum() << endl;
 			CheckP[checkId].refreshPopTime();
 			SerpQ.popPassenger();
+			for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
+			if(curFreeRtp > 0) curFreeRtp--;
+			//cout << SerpQ.getNum() << endl;
 		}
 		int nowCheckNum = getCheckNum(CheckP);
 		int switchC = whetherSwitchCheckPoint(SerpQ, nowCheckNum);
 		makeSwitchCheckPoint(CheckP, switchC);
 		Sleep(t_unit);
 	}
-	return 0;
 }

@@ -35,7 +35,6 @@ void Button::mouseClick(int btn, int state, int x, int y) {
         //dosomething
 		if (texId == ::texId[button_normal] + 2) {
 			aniWindow = true;
-			cout << "changed" << endl;
 		} else if(texId == ::texId[arrow_left_normal] + 2) {
             if(*corspVar > 1) *corspVar -= 1;
             writeSettingFile();

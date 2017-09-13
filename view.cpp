@@ -7,12 +7,14 @@
 #include <cmath>
 #include <cstdlib>
 #include <string>
+#include <algorithm>
 #include <windows.h>
 #include "globalvar.h"
 #include "button.h"
 
 #include "glyph.h"
 #include "passenger.h"
+#include "serpqueue.h"
 
 using std::cout;
 using std::endl;
@@ -32,13 +34,13 @@ extern texName a;
 int texId[300];
 
 std::vector<Point> route;
-int passengerPerLine = 20, passengerPerSkew = 2; // 每排&每斜线人数
+// 每排&每斜线人数
 // passenger纹理总数
 int passengerTexNum = 5;
 
 
 // 控制FPS
-int FPS = 60;
+int FPS = 30;
 int timeInterval;
 
 
@@ -93,7 +95,7 @@ void show() {
 void drawInit() {
     // 必要的数值计算
     lmd = alp / sqdw;
-    cout << lmd << endl;
+    //cout << lmd << endl;
     SQDW=lmd*sqdw, SQDH=lmd*sqdh*alph, SQLRW=lmd*sqlrw, SQLRH=lmd*sqlrh*alph;
     SQdX=lmd*dltx, SQdY=lmd*dlty*alph, SQdX_=lmd*dltx_, SQdY_=lmd*dlty_*alph;
 
@@ -128,15 +130,17 @@ void flush(int value) {
         drawButton();
     } else {
         // 图形
-        drawSerpQueue();
-
-        Passenger p(10, 10);
-        p.move();
-        //cout << "moved " << p.pos.x << " " << p.pos.y << endl;
-        p.draw();
-        //cout << "drawn " << p.width << " " << p.height << endl;
 
         // 移动队列中所有乘客并绘制
+        for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move(),cout<<"this:"<<&SerpQ[i]<< endl;;
+        //cout << SerpQ[1].pos.x << "." << SerpQ[1].pos.y << endl;
+        cout<<"00**"<<SerpQ[0].pos.x << "." << SerpQ[0].pos.y << endl;
+        cout << "routeId list:" << endl;
+        for(int i = 0; i < SerpQ.getNum(); i++)
+            cout << SerpQ[i].routeId<<SerpQ[i].pos.x << "." << SerpQ[i].pos.y << endl;
+        drawSerpQueue();
+
+
 
     }
 
@@ -260,44 +264,51 @@ void mouseClick(int btn, int state, int x, int y) {
 // 绘制蛇形队列
 void drawSerpQueue() {
     drawObject(_serpQueueLeft, Point(SQX+SQdX+2*SQdX_,SQY+SQdY+2*SQdY_), SQLRW, SQLRH);
-    int i = route.size()-1;
-    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--)
-        drawObject(_checkPoint, route[i], 0.07, 0.25);
-    drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
-    for(int j = 0; j < passengerPerLine + passengerPerSkew; j++, i--)
-        drawObject(_checkPoint, route[i], 0.07, 0.25);
-    drawObject(_serpQueueLeft, Point(SQX+SQdX,SQY+SQdY), SQLRW, SQLRH);
-    for(int j = 0; j < passengerPerLine + passengerPerSkew && i >= 0; j++, i--)
-        drawObject(_checkPoint, route[i], 0.07, 0.25);
-    drawObject(_serpQueueDownU, Point(SQX,SQY), SQDW, SQDH);
-    while(i >= 0) {
-        drawObject(_checkPoint, route[i], 0.07, 0.25);
-        i--;
+    int i = 0;
+    for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++) {
+        
+        SerpQ[i].draw();
     }
+    //cout << "drawing pass at" << SerpQ[1].pos.x << "." << SerpQ[1].pos.y << endl;
+    drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
+    for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
+        SerpQ[i].draw();
+    drawObject(_serpQueueLeft, Point(SQX+SQdX,SQY+SQdY), SQLRW, SQLRH);
+    for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
+        SerpQ[i].draw();
+    drawObject(_serpQueueDownU, Point(SQX,SQY), SQDW, SQDH);
+    for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
+        SerpQ[i].draw();
     drawObject(_serpQueueDownL, Point(SQX,SQY), SQDW, SQDH);
 }
 
 
 Point genSkew(Point base) {
-    Point step = Point(90/(passengerPerSkew+1)*lmd, 93/(passengerPerSkew+1)*lmd*alph);
-    for(int i = 1; i <= passengerPerSkew; i++) route.push_back(base + step*i);
-    return Point(base + step*(passengerPerSkew+1));
+    Point step = Point(90/(MaxCustSingleSkew+1)*lmd, 93/(MaxCustSingleSkew+1)*lmd*alph);
+    for(int i = 1; i <= MaxCustSingleSkew; i++) route.push_back(base + step*i);
+    return Point(base + step*(MaxCustSingleSkew+1));
 }
 
 void genRoute() {
     Point base(SQX + 88*lmd, SQY + 66*lmd);
-    float step = 1144*1.0/(passengerPerLine+1)*lmd;
-    cout << lmd;
-    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(passengerPerLine-1)*step+step/2, base.y));
+    float step = 1144*1.0/(MaxCustSingleLine+1)*lmd;
+    //cout << lmd;
+    for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
     step = -step;
-    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(passengerPerLine-1)*step+step/2, base.y));
+    for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
     step = -step;
-    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(passengerPerLine-1)*step+step/2, base.y));
+    for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
     step = -step;
-    for(int i = 0; i < passengerPerLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+
+
+    std::reverse(route.begin(),route.end());
+    cout << route.size();
+    for(int i = 0; i < route.size(); i++) 
+        cout << route[i].x << endl;
 }
 
 

@@ -15,11 +15,11 @@ int SerpQueue::getCustSingleLine() {
     return custSingleLine;
 }
 bool SerpQueue::isFull() {
-    return getNum() == MaxCustSingleLine * MaxLines;
+    return getNum() >= MaxCustSingleLine * MaxLines;
 }
 
 
 
 bool RestArea::isFull() {
-    return getNum() == MaxRestNum;
+    return getNum() >= MaxRestNum;
 }

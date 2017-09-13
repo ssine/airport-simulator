@@ -43,9 +43,9 @@ void CheckPoint::refreshNum() {
 void CheckPoint::refreshPopTime() {
     if(getTime()>nextPopTime)
     {
-        popPassenger();
+        //popPassenger();
 		if(!isempty())
-		nextPopTime=getTime()+getFirstPassenger().checkTime;
+        nextPopTime=getTime()+getFirstPassenger().checkTime;
     }
 }
 

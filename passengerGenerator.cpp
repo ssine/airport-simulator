@@ -10,12 +10,11 @@
 void PassengerGenerator::addPassenger(int num)
 {
 	srand((unsigned)time(NULL));
-	int id, arrTime, checkTime;
+	int arrTime, checkTime;
 	for (int i = 0; i<num; i++)
 	{
-		id = m_maxid++;
 		arrTime = rand() % 300;
-		checkTime = rand() % MaxSec * 5;
+		checkTime = rand() % MaxSec;
 		RestPoint->addPassenger(arrTime, checkTime);
 	}
 }

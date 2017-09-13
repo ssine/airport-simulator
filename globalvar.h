@@ -1,9 +1,11 @@
 #pragma once
 #include <ctime>
+#include "serpqueue.h"
 
 extern int MinCheck;
 extern int MaxCheck;
 extern int MaxCustSingleLine;
+extern int MaxCustSingleSkew;
 extern int MaxLines;
 extern int MaxSeqLen;
 extern int EasySeqLen;
@@ -15,9 +17,12 @@ extern int onDuty;
 extern int offDuty;
 extern int pause;
 extern int closed;
+
+extern int curFreeRtp;
 // 打开动画
 extern bool aniWindow;
 
+extern SerpQueue SerpQ;
 
 // 材质名字的枚举变量，实现动图的时候需要改
 typedef enum textureName

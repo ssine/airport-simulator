@@ -7,13 +7,13 @@
 #include "passenger.h"
 #include "globalvar.h"
 
-Passenger Queue::operator[](int n) {
+Passenger& Queue::operator[](int n) {
     return q[n];
 }
 
 void Queue::addPassenger(Passenger pass) {
     q.push_back(pass);
-    std::cout<<"***"<<q.size()<<std::endl;
+    //std::cout<<"***"<<q.size()<<std::endl;
 }
 
 void Queue::addPassenger(int arriveTime, int checkTime) {
@@ -22,10 +22,16 @@ void Queue::addPassenger(int arriveTime, int checkTime) {
 }
 
 void Queue::popPassenger() {
-    q.erase(q.begin());
+    if(!q.empty()) {
+        q.erase(q.begin());
+        for(int i = 0; i < q.size(); i++) {
+            q[i].routeId++;
+        }
+        //std::cout << "pass poped" << std::endl;
+    }
 }
 
-Passenger Queue::getFirstPassenger() {
+Passenger& Queue::getFirstPassenger() {
     return q[0];
 }
 
