@@ -45,7 +45,11 @@
     <ClInclude Include="struct.h">
       <Filter>头文件</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="passenger.h">
+=======
+    <ClInclude Include="passengerGenerator.h">
+>>>>>>> master
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +78,11 @@
     <ClCompile Include="serpqueue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="passenger.cpp">
+=======
+    <ClCompile Include="passengerGenerator.cpp">
+>>>>>>> master
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

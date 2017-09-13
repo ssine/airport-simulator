@@ -142,7 +142,11 @@
     <ClInclude Include="checkpoint.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="globalvar.h" />
+<<<<<<< HEAD
     <ClInclude Include="passenger.h" />
+=======
+    <ClInclude Include="passengerGenerator.h" />
+>>>>>>> master
     <ClInclude Include="queue.h" />
     <ClInclude Include="serpqueue.h" />
     <ClInclude Include="stdafx.h" />
@@ -155,7 +159,11 @@
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="function.cpp" />
     <ClCompile Include="globalvar.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="passenger.cpp" />
+=======
+    <ClCompile Include="passengerGenerator.cpp" />
+>>>>>>> master
     <ClCompile Include="queue.cpp" />
     <ClCompile Include="serpqueue.cpp" />
     <ClCompile Include="stdafx.cpp">

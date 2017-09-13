@@ -25,5 +25,10 @@ int distribution(CheckPoint CheckP[]);
 
 void refreshCheckPoint(CheckPoint CheckP[]);
 
-//开放或关闭窗口 1开-1关0不动
-int switchCheck(SerpQueue &SerpQ,const int nowCheckNum);
+int whetherSwitchCheckPoint(SerpQueue &SerpQ, const int nowCheckNum);
+
+int getCheckNum(CheckPoint CheckP[]);
+
+void makeSwitchCheckPoint(CheckPoint CheckP[], int op);//开关安检口
+
+void programEnd();//下班

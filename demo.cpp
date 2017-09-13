@@ -14,14 +14,14 @@
 #include "serpqueue.h"
 #include "function.h"
 #include "globalvar.h"
-
+#include "passengerGenerator.h"
 
 
 using namespace std;
 
 
 
-//PassengerGenerator PassengerG;
+PassengerGenerator PassengerG;
 CheckPoint CheckP[10];
 
 int main(int argc, char *argv[])
@@ -33,23 +33,22 @@ int main(int argc, char *argv[])
 	{
 		if (i<MinCheck)
 			CheckP[i].start();
-		/*else
-		CheckP[i].shut();*/
+		CheckP[i].shut();
 	}
 	RestArea RestA;
 	SerpQueue SerpQ;
-	//PassengerG.setRestArea(&RestA);
+	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
 		int c = rand() % 10;
 		for (int i = 0; i<c; i++)
-			//PassengerG.addSingle();
+			PassengerG.addSingle();
 			//休息区to蛇形队列
-			while (!SerpQ.isFull() && !RestA.isempty())
-			{
-				SerpQ.addPassenger(RestA.getFirstPassenger());
-				RestA.popPassenger();
-			}
+		while (!SerpQ.isFull() && !RestA.isempty())
+		{
+			SerpQ.addPassenger(RestA.getFirstPassenger());
+			RestA.popPassenger();
+		}
 		int checkId;
 		//更新安检口状态，如暂停结束操作，关闭结束操作
 		refreshCheckPoint(CheckP);
@@ -61,9 +60,9 @@ int main(int argc, char *argv[])
 			CheckP[checkId].refreshPopTime();
 			SerpQ.popPassenger();
 		}
-		//int nowCheckNum = getCheckNum(CheckP);
-		//int switchC = whetherSwitchCheckPoint(SerpQ, nowCheckNum);
-		//makeSwitchCheckPoint(CheckP, switchC);
+		int nowCheckNum = getCheckNum(CheckP);
+		int switchC = whetherSwitchCheckPoint(SerpQ, nowCheckNum);
+		makeSwitchCheckPoint(CheckP, switchC);
 		Sleep(t_unit);
 	}
 	return 0;
