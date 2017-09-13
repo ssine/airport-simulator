@@ -1,6 +1,6 @@
 #pragma once
-#include "glyph.h"
 #include "struct.h"
+#include "glyph.h"
 
 class Passenger : public Glyph {
 public:

@@ -7,6 +7,7 @@
 #include <vector>
 #include "struct.h"
 #include "passenger.h"
+#include "globalvar.h"
 
 // 窗口宽高
 extern const int windowWidth;
@@ -15,8 +16,8 @@ extern int curWindowWidth;
 extern int curWindowHeight;
 extern bool aniWindow;
 
-// 材质名字的枚举变量，实现动图的时候需要改
-enum texName;
+
+extern int texId[];
 
 // 乘客路径点
 extern std::vector<Point> route;
@@ -38,6 +39,8 @@ void genRoute();
 
 // 绘图
 void drawVars();
+void drawButton();
+void initButton();
 void drawObject(texName, Point&, float, float);
 void drawSerpQueue();
 void flush(int value);
@@ -52,7 +55,8 @@ void changeSize(int w, int h);
 
 // 键鼠交互回调函数
 void onEscPressed(unsigned char key, int x, int y);
-
+void mouseMotion(int x, int y);
+void mouseClick(int btn, int state, int x, int y);
 
 
 #endif

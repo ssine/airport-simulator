@@ -3,10 +3,13 @@
 #include "view.h"
 #include "glyph.h"
 
+#include <iostream>
+using namespace std;
+
 bool Glyph::mouseIn(int x, int y) {
     if(
-        curWindowWidth*pos.x < x && x < curWindowWidth*(pos.x+width)
-        && curWindowHeight*pos.y < y && y < curWindowHeight*(pos.y+height)
+        curWindowWidth/2*(pos.x+1) < x && x < curWindowWidth/2*(pos.x+width+1)
+        && curWindowHeight/2*(-pos.y-height+1) < y && y < curWindowHeight/2*(-pos.y+1)
     ) return true;
     else return false;
 }
@@ -25,4 +28,5 @@ void Glyph::draw() {
 	glEnd();
 	glDisable(GL_ALPHA_TEST);//试描画结束
     glDisable(GL_TEXTURE_2D);//图像无效
+    //cout << texId << endl;
 }

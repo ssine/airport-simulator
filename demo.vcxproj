@@ -140,6 +140,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="button.h" />
     <ClInclude Include="checkpoint.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="globalvar.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="view.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="checkpoint.cpp" />
     <ClCompile Include="demo.cpp" />
     <ClCompile Include="function.cpp" />

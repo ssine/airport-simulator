@@ -1,7 +1,6 @@
 #pragma once
 
 #include "struct.h"
-#include "view.h"
 
 class Glyph
 {

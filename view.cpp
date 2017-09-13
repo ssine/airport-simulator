@@ -9,6 +9,7 @@
 #include <string>
 #include <windows.h>
 #include "globalvar.h"
+#include "button.h"
 
 #include "glyph.h"
 #include "passenger.h"
@@ -25,17 +26,10 @@ int curWindowHeight = 768;
 // 窗口名称
 const char* windowTitle = "测试样例";
 
-// 打开动画
-bool aniWindow = false;
 
-// Texutre材质管理
-enum texName {
-    _passenger, _checkPoint, _serpQueueLeft, _serpQueueRight,
-    _serpQueueDownL, _serpQueueDownU, _restArea,
-    arrow_left_normal, arrow_left_pressed, arrow_right_normal, arrow_right_pressed,
-    button_normal, button_hover, button_pressed
-};
-int texId[100];
+
+extern texName a;
+int texId[300];
 
 std::vector<Point> route;
 int passengerPerLine = 20, passengerPerSkew = 2; // 每排&每斜线人数
@@ -44,7 +38,7 @@ int passengerTexNum = 5;
 
 
 // 控制FPS
-int FPS = 30;
+int FPS = 60;
 int timeInterval;
 
 
@@ -60,13 +54,16 @@ float SQDW, SQDH, SQLRW, SQLRH;
 float SQdX, SQdY, SQdX_, SQdY_;
 
 
-float varX = -0.5, varY = 0.5;
-float nameVarSpace = 0.4;
+float varX = -0.5, varY = 0.7;
+float nameVarSpace = 0.7;
+float nameBtnSpace = 0.53;
+float nameBtnSpace2 = 0.3;
 float varListHeight = 0.2;
+
+std::vector<Button> btnList;
 
 void drawString(const char* str);
 void selectFont(int size, int charset, const char* face);
-
 
 void show() {
 	int initint = 1;
@@ -79,6 +76,8 @@ void show() {
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutCreateWindow(windowTitle);
     glutReshapeFunc(changeSize);
+    glutPassiveMotionFunc(mouseMotion);
+    glutMouseFunc(mouseClick);
 
     //初始化
     drawInit();
@@ -104,6 +103,8 @@ void drawInit() {
     // 生成乘客路径点
     genRoute();
 
+    // 生成按钮
+    initButton();
 
     srand(20);
 
@@ -124,6 +125,7 @@ void flush(int value) {
     if(value == 0) {
         // 变量编辑
         drawVars();
+        drawButton();
     } else {
         // 图形
         drawSerpQueue();
@@ -139,7 +141,7 @@ void flush(int value) {
     }
 
     glutSwapBuffers();
-
+    //cout << "flushed!" << endl;
     if(aniWindow) glutTimerFunc(timeInterval, flush, 1);
     else glutTimerFunc(timeInterval, flush, 0);
 }
@@ -148,7 +150,8 @@ void flush(int value) {
 
 void drawVars() {
     char s[100];
-    glColor3f(0.0f, 0.0f, 0.0f);     //设置字体颜色
+
+    glColor3f(1.0f, 1.0f, 1.0f);     //设置字体颜色
 
     glRasterPos2f(varX, varY);
     sprintf(s, "MinCheck");
@@ -207,9 +210,102 @@ void drawVars() {
     drawString(s);   //输出的字符串
 	
 
+    glRasterPos2f(varX, varY-1*varListHeight);
+    sprintf(s, "MaxCheck");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-1*varListHeight);
+    sprintf(s, "%d", MaxCheck);
+    drawString(s);   //输出的字符串
+    
+    glRasterPos2f(varX, varY-2*varListHeight);
+    sprintf(s, "MaxCustSingleLine");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace,varY-2*varListHeight);
+    sprintf(s, "%d", MaxCustSingleLine);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-3*varListHeight);
+    sprintf(s, "MaxLines");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-3*varListHeight);
+    sprintf(s, "%d", MaxLines);
+    drawString(s);   //输出的字符串
 
-    //glRasterPos2f(varX, varY-varListHeight);
-    //drawString("30");
+    glRasterPos2f(varX, varY-4*varListHeight);
+    sprintf(s, "MaxSeqLen");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-4*varListHeight);
+    sprintf(s, "%d", MaxSeqLen);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-5*varListHeight);
+    sprintf(s, "EasySeqLen");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-5*varListHeight);
+    sprintf(s, "%d", EasySeqLen);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-6*varListHeight);
+    sprintf(s, "MaxCustCheck");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-6*varListHeight);
+    sprintf(s, "%d", MaxCustCheck);
+    drawString(s);   //输出的字符串
+	
+    glRasterPos2f(varX, varY-7*varListHeight);
+    sprintf(s, "MaxSec");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-7*varListHeight);
+    sprintf(s, "%d", MaxSec);
+    drawString(s);   //输出的字符串
+
+}
+
+void initButton() {
+    for(int i = 0; i < 8; i++) {
+        btnList.push_back(Button(varX+nameBtnSpace, varY-i*varListHeight-0.01, arrow_left_normal));
+    }
+    for(int i = 0; i < 8; i++) {
+        btnList.push_back(Button(varX+nameBtnSpace+nameBtnSpace2, varY-i*varListHeight-0.01, arrow_right_normal));
+    }
+    btnList.push_back(Button(0.5, -0.5, button_normal));
+    btnList[0].corspVar = &MinCheck;
+    btnList[1].corspVar = &MaxCheck;
+    btnList[2].corspVar = &MaxCustSingleLine;
+    btnList[3].corspVar = &MaxLines;
+    btnList[4].corspVar = &MaxSeqLen;
+    btnList[5].corspVar = &EasySeqLen;
+    btnList[6].corspVar = &MaxCustCheck;
+    btnList[7].corspVar = &MaxSec;
+    btnList[8].corspVar = &MinCheck;
+    btnList[9].corspVar = &MaxCheck;
+    btnList[10].corspVar = &MaxCustSingleLine;
+    btnList[11].corspVar = &MaxLines;
+    btnList[12].corspVar = &MaxSeqLen;
+    btnList[13].corspVar = &EasySeqLen;
+    btnList[14].corspVar = &MaxCustCheck;
+    btnList[15].corspVar = &MaxSec;
+
+}
+
+void drawButton() {
+    for(auto btn : btnList) {
+        btn.draw();
+    }
+}
+
+void mouseMotion(int x, int y) {
+    for(int i = 0; i < btnList.size(); i++) {
+        btnList[i].mouseMove(x, y);
+    }
+}
+
+
+void mouseClick(int btn, int state, int x, int y) {
+    for(int i = 0; i < btnList.size(); i++) {
+        btnList[i].mouseClick(btn, state, x, y);
+    }
+
 }
 
 
@@ -325,6 +421,54 @@ void loadTexture() {
     );
     texId[_restArea] = SOIL_load_OGL_texture(
         ".\\source\\restArea.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    texId[arrow_left_normal] = SOIL_load_OGL_texture(
+        ".\\source\\left_normal.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[arrow_left_pressed] = SOIL_load_OGL_texture(
+        ".\\source\\left_pressed.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[arrow_right_normal] = SOIL_load_OGL_texture(
+        ".\\source\\right_normal.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[arrow_right_pressed] = SOIL_load_OGL_texture(
+        ".\\source\\right_pressed.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[button_normal] = SOIL_load_OGL_texture(
+        ".\\source\\normal.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[button_hover] = SOIL_load_OGL_texture(
+        ".\\source\\hover.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[button_pressed] = SOIL_load_OGL_texture(
+        ".\\source\\pressed.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
