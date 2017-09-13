@@ -110,8 +110,11 @@ void refreshCheckPoint(CheckPoint CheckP[])
         if(CheckP[i].getState()==onDuty)
             {
                 CheckP[i].refreshNum();
-
             }
+		else if(CheckP[i].getState()==pause)
+		{
+			CheckP[i].nextPopTime += t_unit;
+		}
 }
 
 //开放或关闭窗口 1开-1关0不动
