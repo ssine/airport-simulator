@@ -1,6 +1,7 @@
-#include "glyph.h"
+#include "stdafx.h"
 #include <GL/glut.h>
 #include "view.h"
+#include "glyph.h"
 
 bool Glyph::mouseIn(int x, int y) {
     if(

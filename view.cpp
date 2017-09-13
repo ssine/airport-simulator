@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <string>
 
-#include "glyph.cpp"
+#include "glyph.h"
 #include "passenger.h"
 
 using std::cout;
