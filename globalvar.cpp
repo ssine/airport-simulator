@@ -12,6 +12,7 @@ int EasySeqLen = 2;
 int MaxCustCheck = 5;
 int MaxSec = 5;
 int MaxRestNum = 1000;
+int distributionMethod = 0;
 int onDuty = 0;
 int offDuty = 1;
 int pause = 2;

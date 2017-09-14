@@ -92,17 +92,62 @@ void writeLogFile(std::string s)
     fout<<s;
 }
 
+
 int distribution(CheckPoint* CheckP[])
 {
-    for(int i=0;i<MaxCheck;i++)
-    {
-        if(CheckP[i]->getState()==onDuty&&!CheckP[i]->isFull())
-        {
-            return i;
-        }
-    }
-    return -1;
+	if (distributionMethod == 0)
+	{
+		for (int i = 0; i < MaxCheck; i++)
+		{
+			if (CheckP[i]->getState() == onDuty && !CheckP[i]->isFull())
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	else if (distributionMethod == 1)
+	{
+		int nowminid = -1;
+		int nowmin = 0x3f3f3f3f;
+		for (int i = 0; i < MaxCheck; i++)
+		{
+			if (CheckP[i]->getState() == onDuty && !CheckP[i]->isFull())
+			{
+				if (nowmin > CheckP[i]->getNum())
+				{
+					nowmin = CheckP[i]->getNum();
+					nowminid = i;
+				}
+			}
+		}
+		return nowminid;
+	}
+	else if (distributionMethod == 2)
+	{
+		int nowminid = -1;
+		int nowmin = 0x3f3f3f3f;
+		for (int i = 0; i < MaxCheck; i++)
+		{
+			if (CheckP[i]->getState() == onDuty && !CheckP[i]->isFull())
+			{
+				int checkTimeSum = 0;
+				for (int j = 0; j < CheckP[i]->getNum(); j++)
+				{
+					checkTimeSum += (*CheckP[i])[j].checkTime;
+				}
+				if (nowmin > checkTimeSum)
+				{
+					nowmin = checkTimeSum;
+					nowminid = i;
+				}
+			}
+		}
+		return nowminid;
+	}
 }
+
+
 
 void refreshCheckPoint(CheckPoint* CheckP[])
 {

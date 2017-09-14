@@ -17,7 +17,7 @@ extern int onDuty;
 extern int offDuty;
 extern int pause;
 extern int closed;
-
+extern int distributionMethod;
 extern int MaxCustNum;
 
 extern int curFreeRtp;

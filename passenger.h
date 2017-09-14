@@ -8,6 +8,7 @@ public:
     int id;
     int arriveTime, checkTime;
     int routeId; // 要去哪个路径点
+	bool isMuslim;
     static int count;
     Passenger(int arriveTime, int checkTime);
     void move();

@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#include <random>
+#include <ctime>
 #include "queue.h"
 #include "struct.h"
 #include "passenger.h"
@@ -18,6 +20,11 @@ void Queue::addPassenger(Passenger pass) {
 
 void Queue::addPassenger(int arriveTime, int checkTime) {
     Passenger pass(arriveTime, checkTime);
+	srand((unsigned)time(NULL));
+	if(rand()%100<6)
+		pass.isMuslim = true;
+	else
+		pass.isMuslim = false;
     q.push_back(pass);
 }
 
