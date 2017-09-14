@@ -138,7 +138,10 @@ void flush(int value) {
         // 移动队列中所有乘客并绘制
         for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
         drawSerpQueue();
-
+        for(int i = 0; i < MaxCheck; i++) {
+            for(int j = 0; j < CheckP[i]->getNum(); j++)
+                (*(CheckP[i]))[j].move();
+        }
         drawCheckPoint();
 
     }
@@ -300,7 +303,7 @@ Point genSkew(Point base) {
 
 void genCPRoute(float x, float y) {
     for(int i = 0; i < MaxCustCheck; i++) {
-        route.push_back(Point(x-i*0.05, y-i*0.025));
+        route.push_back(Point(x-i*0.05, y-i*0.075));
     }
 }
 
@@ -327,7 +330,7 @@ void genRoute() {
     MaxCustNum = route.size();
 
     for(int i = 0; i < MaxCheck; i++) {
-        genCPRoute(-0.8 + i*0.22, -0.05);
+        genCPRoute(-0.7 + i*0.22, -0.05);
     }
 
     cout << "MaxCustNum=" << MaxCustNum << "  all pt=" << route.size() << endl;

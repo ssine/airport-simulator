@@ -44,8 +44,11 @@ int CheckPoint::getState() {
 }
 
 void CheckPoint::refreshNum() {
-    if(!isempty()&&getTime()>nextPopTime)
+    if(!isempty()&&getTime()>nextPopTime) {
         popPassenger();
+        for(int i = 0; i < q.size(); i++)
+            q[i].routeId--;
+    }
 }
 
 void CheckPoint::refreshPopTime() {
@@ -64,7 +67,7 @@ void CheckPoint::shut()
 
 
 void CheckPoint::addPassenger(Passenger p) {
-    p.routeId = MaxCustNum+id*MaxCustCheck;
+    p.routeId = MaxCustNum+id*MaxCustCheck-1;
     //cout << "routeId changed to " << p.routeId << endl;
     q.push_back(p);
 }
