@@ -67,8 +67,8 @@ void CheckPoint::shut()
 
 
 void CheckPoint::addPassenger(Passenger p) {
-    p.routeId = MaxCustNum+id*MaxCustCheck-1;
-    //cout << "routeId changed to " << p.routeId << endl;
+    p.routeId = MaxCustNum+1+id*(MaxCustCheck+1) + getNum();
+    cout << "routeId changed to " << p.routeId <<endl;
     q.push_back(p);
 }
 
@@ -82,8 +82,12 @@ CheckPoint::CheckPoint() {
 
 void CheckPoint::draw() {
     this->Glyph::draw();
-    for(int i = 0; i < this->getNum(); i++)
+    //if(getState() == offDuty || getState() == closed) return;
+    for(int i = 0; i < this->getNum(); i++) {
         (*this)[i].draw();
-    //cout << this->getNum() << "passengers drawn " << endl;
+        //cout << "routeid = " << (*this)[i].routeId << endl;
+        //cout << (*this)[i].pos.x << " " << (*this)[i].pos.y << endl;
+    }
+    cout << this->getNum() << "passengers drawn " << endl;
 }
 

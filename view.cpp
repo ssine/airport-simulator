@@ -155,6 +155,10 @@ void flush(int value) {
 
 void drawCheckPoint() {
     for(int i = 0; i < MaxCheck; i++) {
+        if(i == 7/* && CheckP[i]->getNum() > 0*/) {
+            //cout << (*CheckP[i])[0].pos.x << endl;
+            cout << "drawing line 7" << endl;
+        }
         CheckP[i]->draw();
     }
 }
@@ -302,8 +306,9 @@ Point genSkew(Point base) {
 }
 
 void genCPRoute(float x, float y) {
-    for(int i = 0; i < MaxCustCheck; i++) {
+    for(int i = 0; i < MaxCustCheck+1; i++) {
         route.push_back(Point(x-i*0.05, y-i*0.075));
+        //cout << "x = " << x-i*0.05 << "; y = " << y-i*0.075 << endl;
     }
 }
 

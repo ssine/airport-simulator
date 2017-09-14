@@ -61,7 +61,7 @@ void run() {
 		{
 			//cerr <<"2"<< RestA.isempty() << endl;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
-			if(curFreeRtp < MaxCustNum - 2) curFreeRtp++;
+			if(curFreeRtp < MaxCustNum - 1) curFreeRtp++;
 			RestA.popPassenger();
 		}
 		int checkId;
@@ -76,7 +76,7 @@ void run() {
 			SerpQ.popPassenger();
 			for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
 			if(curFreeRtp > 0) curFreeRtp--;
-			//cout << SerpQ.getNum() << endl;
+			//cout << CheckP[7]->getNum() << endl;
 		}
 		int nowCheckNum = getCheckNum(CheckP);
 		int switchC = whetherSwitchCheckPoint(SerpQ, nowCheckNum);

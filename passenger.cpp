@@ -24,7 +24,7 @@ Passenger::Passenger(int arriveTime, int checkTime) {
     this->arriveTime = arriveTime;
     this->checkTime = checkTime;
 
-    texId = getPassengerTexId();
+    texId = /*getPassengerTexId()*/2;
     this->width = ::width;
     this->height = ::height;
     pos.x = pos.y = -1.0;
@@ -32,7 +32,7 @@ Passenger::Passenger(int arriveTime, int checkTime) {
 }
 
 void Passenger::move() {
-    //cout << routeId << endl;
+    //cout << "using id" << routeId << endl;
     //pos = route[routeId];
     //cout <<routeId << "moved to " << pos.x << "." << pos.y << "this:" << this <<  endl;
     pos.x += sym(pos.x, route[routeId].x) * step;
