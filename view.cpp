@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <vector>
 #include <cmath>
+#include <ctime>
 #include <cstdlib>
 #include <string>
 #include <algorithm>
@@ -15,20 +16,23 @@
 #include "glyph.h"
 #include "passenger.h"
 #include "serpqueue.h"
+#include "checkpoint.h"
 
 using std::cout;
 using std::endl;
 
+clock_t clock();
+
 // 窗口宽高
-const int windowWidth = 1366;
-const int windowHeight = 768;
+const int windowWidth = 1024;
+const int windowHeight = 576;
 int curWindowWidth = 1366;
 int curWindowHeight = 768;
 
 // 窗口名称
 const char* windowTitle = "测试样例";
 
-
+extern CheckPoint* CheckP[];
 
 extern texName a;
 int texId[300];
@@ -40,7 +44,7 @@ int passengerTexNum = 5;
 
 
 // 控制FPS
-int FPS = 30;
+int FPS = 60;
 int timeInterval;
 
 
@@ -102,13 +106,13 @@ void drawInit() {
     // 读取材质
     loadTexture();
 
+    for(int i = 0; i < MaxCheck; i++) CheckP[i] = new CheckPoint();
+
     // 生成乘客路径点
     genRoute();
 
     // 生成按钮
     initButton();
-
-    srand(20);
 
     // 设定空白色
     glClearColor(0.796875, 0.59765625, 1.0, 1.0);
@@ -132,15 +136,10 @@ void flush(int value) {
         // 图形
 
         // 移动队列中所有乘客并绘制
-        for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move(),cout<<"this:"<<&SerpQ[i]<< endl;;
-        //cout << SerpQ[1].pos.x << "." << SerpQ[1].pos.y << endl;
-        cout<<"00**"<<SerpQ[0].pos.x << "." << SerpQ[0].pos.y << endl;
-        cout << "routeId list:" << endl;
-        for(int i = 0; i < SerpQ.getNum(); i++)
-            cout << SerpQ[i].routeId<<SerpQ[i].pos.x << "." << SerpQ[i].pos.y << endl;
+        for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
         drawSerpQueue();
 
-
+        drawCheckPoint();
 
     }
 
@@ -150,6 +149,12 @@ void flush(int value) {
     else glutTimerFunc(timeInterval, flush, 0);
 }
 
+
+void drawCheckPoint() {
+    for(int i = 0; i < MaxCheck; i++) {
+        CheckP[i]->draw();
+    }
+}
 
 
 void drawVars() {
@@ -289,6 +294,12 @@ Point genSkew(Point base) {
     return Point(base + step*(MaxCustSingleSkew+1));
 }
 
+void genCPRoute(float x, float y) {
+    for(int i = 0; i < MaxCustCheck; i++) {
+        route.push_back(Point(x-i*0.05, y-i*0.025));
+    }
+}
+
 void genRoute() {
     Point base(SQX + 88*lmd, SQY + 66*lmd);
     float step = 1144*1.0/(MaxCustSingleLine+1)*lmd;
@@ -306,9 +317,17 @@ void genRoute() {
 
 
     std::reverse(route.begin(),route.end());
-    cout << route.size();
-    for(int i = 0; i < route.size(); i++) 
-        cout << route[i].x << endl;
+    // cout << route.size();
+    // for(int i = 0; i < route.size(); i++) 
+    //     cout << route[i].x << endl;
+    MaxCustNum = route.size();
+
+    for(int i = 0; i < MaxCheck; i++) {
+        genCPRoute(-0.8 + i*0.22, -0.05);
+    }
+
+    cout << "MaxCustNum=" << MaxCustNum << "  all pt=" << route.size() << endl;
+
 }
 
 
@@ -342,14 +361,18 @@ void onEscPressed(unsigned char key, int x, int y) {
 
 
 int getPassengerTexId() {
-    return int(rand()*1.0*passengerTexNum/RAND_MAX+1);
+    srand(clock());
+    //int id = int(rand()*1.0*passengerTexNum/RAND_MAX+1);
+    int id = (clock() % passengerTexNum)+1;
+    //cout << "id:" << id << "  time:" << clock() <<  endl;
+    return id;
 }
 
 // 读取材质，要用GIF的话需要重写
 void loadTexture() {
     loadPassengerTex();
     texId[_checkPoint] = SOIL_load_OGL_texture(
-        ".\\source\\checkPoint.png",
+        ".\\source\\checkpoint.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
@@ -432,6 +455,7 @@ void loadTexture() {
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
+
 }
 
 void loadPassengerTex() {

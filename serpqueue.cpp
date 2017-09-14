@@ -5,8 +5,7 @@
 
 
 extern int MaxRestNum;
-extern int MaxCustSingleLine;
-extern int MaxLines;
+extern int MaxCustNum;
 
 int SerpQueue::getLineNum() {
     return lineNum;
@@ -15,7 +14,7 @@ int SerpQueue::getCustSingleLine() {
     return custSingleLine;
 }
 bool SerpQueue::isFull() {
-    return getNum() >= MaxCustSingleLine * MaxLines;
+    return getNum() >= MaxCustNum;
 }
 
 

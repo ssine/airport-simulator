@@ -18,6 +18,8 @@ extern int offDuty;
 extern int pause;
 extern int closed;
 
+extern int MaxCustNum;
+
 extern int curFreeRtp;
 // 打开动画
 extern bool aniWindow;

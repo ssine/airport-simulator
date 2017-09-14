@@ -21,14 +21,14 @@ void clearLogFile();
 
 void writeLogFile(std::string s);
 
-int distribution(CheckPoint CheckP[]);
+int distribution(CheckPoint* CheckP[]);
 
-void refreshCheckPoint(CheckPoint CheckP[]);
+void refreshCheckPoint(CheckPoint* CheckP[]);
 
 int whetherSwitchCheckPoint(SerpQueue &SerpQ, const int nowCheckNum);
 
-int getCheckNum(CheckPoint CheckP[]);
+int getCheckNum(CheckPoint* CheckP[]);
 
-void makeSwitchCheckPoint(CheckPoint CheckP[], int op);//开关安检口
+void makeSwitchCheckPoint(CheckPoint* CheckP[], int op);//开关安检口
 
 void programEnd();//下班

@@ -4,6 +4,14 @@
 #include "queue.h"
 #include "checkpoint.h"
 #include "function.h"
+#include "view.h"
+
+#include <iostream>
+using namespace std;
+
+int CheckPoint::num = 0;
+float CPInterval = 0.22;
+float CPBaseX = -0.8, CPBaseY = -0.05;
 
 void CheckPoint::start() {
     if(state != offDuty) {
@@ -53,3 +61,26 @@ void CheckPoint::shut()
 {
     state=closed;
 }
+
+
+void CheckPoint::addPassenger(Passenger p) {
+    p.routeId = MaxCustNum+id*MaxCustCheck;
+    //cout << "routeId changed to " << p.routeId << endl;
+    q.push_back(p);
+}
+
+CheckPoint::CheckPoint() {
+    id = num++;
+    width = 0.175; height = 0.5;
+    texId = ::texId[_checkPoint];
+    pos.x = CPBaseX + id*CPInterval;
+    pos.y = CPBaseY;
+}
+
+void CheckPoint::draw() {
+    this->Glyph::draw();
+    for(int i = 0; i < this->getNum(); i++)
+        (*this)[i].draw();
+    //cout << this->getNum() << "passengers drawn " << endl;
+}
+

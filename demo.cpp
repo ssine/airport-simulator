@@ -23,7 +23,7 @@ using namespace std;
 
 
 PassengerGenerator PassengerG;
-CheckPoint CheckP[10];
+CheckPoint* CheckP[20];
 
 
 void run();
@@ -43,9 +43,9 @@ void run() {
 	for (int i = 0; i<MaxCheck; i++)
 	{
 		if (i<MinCheck)
-			CheckP[i].start();
+			CheckP[i]->start();
 		else
-			CheckP[i].shut();
+			CheckP[i]->shut();
 	}
 	RestArea RestA;
 	
@@ -61,7 +61,7 @@ void run() {
 		{
 			//cerr <<"2"<< RestA.isempty() << endl;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
-			if(curFreeRtp < 40) curFreeRtp++;
+			if(curFreeRtp < MaxCustNum - 2) curFreeRtp++;
 			RestA.popPassenger();
 		}
 		int checkId;
@@ -70,10 +70,9 @@ void run() {
 		//蛇形队列to“checkId”号安检口
 		while (!SerpQ.isempty() && (checkId = distribution(CheckP)) != -1)
 		{
-			CheckP[checkId].addPassenger(SerpQ.getFirstPassenger());
+			CheckP[checkId]->addPassenger(SerpQ.getFirstPassenger());
 			//安检完就打死
-			cout << "***" << CheckP[0].getNum() << endl;
-			CheckP[checkId].refreshPopTime();
+			CheckP[checkId]->refreshPopTime();
 			SerpQ.popPassenger();
 			for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
 			if(curFreeRtp > 0) curFreeRtp--;

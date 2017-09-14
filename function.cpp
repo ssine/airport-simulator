@@ -92,11 +92,11 @@ void writeLogFile(std::string s)
     fout<<s;
 }
 
-int distribution(CheckPoint CheckP[])
+int distribution(CheckPoint* CheckP[])
 {
     for(int i=0;i<MaxCheck;i++)
     {
-        if(CheckP[i].getState()==onDuty&&!CheckP[i].isFull())
+        if(CheckP[i]->getState()==onDuty&&!CheckP[i]->isFull())
         {
             return i;
         }
@@ -104,16 +104,16 @@ int distribution(CheckPoint CheckP[])
     return -1;
 }
 
-void refreshCheckPoint(CheckPoint CheckP[])
+void refreshCheckPoint(CheckPoint* CheckP[])
 {
     for(int i=0;i<MaxCheck;i++)
-        if(CheckP[i].getState()==onDuty)
+        if(CheckP[i]->getState()==onDuty)
             {
-                CheckP[i].refreshNum();
+                CheckP[i]->refreshNum();
             }
-		else if(CheckP[i].getState()==pause)
+		else if(CheckP[i]->getState()==pause)
 		{
-			CheckP[i].nextPopTime += t_unit;
+			CheckP[i]->nextPopTime += t_unit;
 		}
 }
 
@@ -128,26 +128,26 @@ int whetherSwitchCheckPoint(SerpQueue &SerpQ, const int nowCheckNum)
 	return 0;
 }
 
-int getCheckNum(CheckPoint CheckP[])
+int getCheckNum(CheckPoint* CheckP[])
 {
 	int num = 0;
 	for (int i = 0; i<MaxCheck; i++)
 	{
-		if (CheckP[i].getState() == onDuty)
+		if (CheckP[i]->getState() == onDuty)
 			num++;
 	}
 	return num;
 }
 
-void makeSwitchCheckPoint(CheckPoint CheckP[], int op)
+void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 {
 	if (op == 1)
 	{
 		for (int i = MinCheck - 1; i<MaxCheck; i++)
 		{
-			if (CheckP[i].getState() == closed)
+			if (CheckP[i]->getState() == closed)
 			{
-				CheckP[i].start();
+				CheckP[i]->start();
 				//cout << i << "is start" << endl;
 				return;
 			}
@@ -157,9 +157,9 @@ void makeSwitchCheckPoint(CheckPoint CheckP[], int op)
 	{
 		for (int i = MaxCheck - 1; i >= MinCheck; i--)
 		{
-			if (CheckP[i].getState() == onDuty)
+			if (CheckP[i]->getState() == onDuty)
 			{
-				CheckP[i].shut();
+				CheckP[i]->shut();
 				//cout << i << "is shut" << endl;
 				return;
 			}
@@ -168,18 +168,18 @@ void makeSwitchCheckPoint(CheckPoint CheckP[], int op)
 	return;
 }
 
-void programEnd(CheckPoint CheckP[])
+void programEnd(CheckPoint* CheckP[])
 {
 	for (int i = 0; i<MaxCheck; i++)
 	{
-		CheckP[i].shut();
+		CheckP[i]->shut();
 	}
 	int sum = 0;
 	while (true)
 	{
 		for (int i = 0; i<MaxCheck; i++)
 		{
-			sum += CheckP[i].getNum();
+			sum += CheckP[i]->getNum();
 		}
 		if (!sum)
 			exit(0);

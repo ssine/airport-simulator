@@ -24,10 +24,6 @@ void Queue::addPassenger(int arriveTime, int checkTime) {
 void Queue::popPassenger() {
     if(!q.empty()) {
         q.erase(q.begin());
-        for(int i = 0; i < q.size(); i++) {
-            q[i].routeId++;
-        }
-        //std::cout << "pass poped" << std::endl;
     }
 }
 

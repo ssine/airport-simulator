@@ -7,9 +7,9 @@ using namespace std;
 
 float width = 0.08, height = 0.25;
 // 动画步长
-float step = 0.005;
+float step = 0.02;
 // 距离终点多远时停止
-float stopEps = 0.01;
+float stopEps = 0.05;
 
 inline float sym(float a, float b) {
     if(std::abs(a - b) < stopEps) return 0.0f;
@@ -33,12 +33,11 @@ Passenger::Passenger(int arriveTime, int checkTime) {
 
 void Passenger::move() {
     //cout << routeId << endl;
-    pos = route[routeId];
-    cout <<routeId << "moved to " << pos.x << "." << pos.y << "this:" << this <<  endl;
-    /*
+    //pos = route[routeId];
+    //cout <<routeId << "moved to " << pos.x << "." << pos.y << "this:" << this <<  endl;
     pos.x += sym(pos.x, route[routeId].x) * step;
     pos.y += sym(pos.y, route[routeId].y) * step;
-    */
+    
 }
 
 void Passenger::nextPoint() {

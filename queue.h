@@ -14,8 +14,8 @@ public:
     int getNum(); //队列人数
     bool isempty();
     Passenger& operator[](int n);
-private:
     std::vector<Passenger> q; //乘客队列;
+private:
 };
 
 class RestArea : public Queue {

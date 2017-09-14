@@ -1,4 +1,5 @@
 #pragma once
+#include <queue>
 #include "struct.h"
 #include "glyph.h"
 
