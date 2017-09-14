@@ -24,11 +24,11 @@ Passenger::Passenger(int arriveTime, int checkTime) {
     this->arriveTime = arriveTime;
     this->checkTime = checkTime;
 
-    texId = /*getPassengerTexId()*/2;
+    texId = getPassengerTexId();
     this->width = ::width;
     this->height = ::height;
     pos.x = pos.y = -1.0;
-    routeId = curFreeRtp;
+    //routeId = curFreeRtp;
 }
 
 void Passenger::move() {

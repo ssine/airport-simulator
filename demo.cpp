@@ -55,13 +55,18 @@ void run() {
 		int c = rand() % 30;
 		for (int i = 0; i<c; i++)
 			PassengerG.addSingle();
-			//休息区to蛇形队列
+			
+		//休息区to蛇形队列
 		//cerr << RestA.isempty()<<endl;
 		while (!SerpQ.isFull() && !RestA.isempty())
 		{
 			//cerr <<"2"<< RestA.isempty() << endl;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
-			if(curFreeRtp < MaxCustNum - 1) curFreeRtp++;
+			SerpQ.getLastPassenger().routeId = curFreeRtp;
+			if(curFreeRtp < MaxCustNum - 1) {
+				curFreeRtp++;
+				cout << "++!  " << curFreeRtp << endl;
+			}
 			RestA.popPassenger();
 		}
 		int checkId;
@@ -75,7 +80,10 @@ void run() {
 			CheckP[checkId]->refreshPopTime();
 			SerpQ.popPassenger();
 			for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
-			if(curFreeRtp > 0) curFreeRtp--;
+			if(curFreeRtp > 0) {
+				curFreeRtp--;
+				cout << "--!  " << curFreeRtp << endl;
+			}
 			//cout << CheckP[7]->getNum() << endl;
 		}
 		int nowCheckNum = getCheckNum(CheckP);

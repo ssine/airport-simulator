@@ -11,6 +11,7 @@ public:
     void addPassenger(Passenger p);
     void popPassenger();  //乘客出队
     Passenger& getFirstPassenger(); //即将出队的乘客
+    Passenger& getLastPassenger();
     int getNum(); //队列人数
     bool isempty();
     Passenger& operator[](int n);

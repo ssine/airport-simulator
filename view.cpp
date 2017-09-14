@@ -24,8 +24,8 @@ using std::endl;
 clock_t clock();
 
 // 窗口宽高
-const int windowWidth = 1024;
-const int windowHeight = 576;
+const int windowWidth = 1366;
+const int windowHeight = 768;
 int curWindowWidth = 1366;
 int curWindowHeight = 768;
 
@@ -130,6 +130,7 @@ void flush(int value) {
 
     if(value == 0) {
         // 变量编辑
+        drawObject(initbg, Point(-1.0, -1.0), 2.0, 2.0);
         drawVars();
         drawButton();
     } else {
@@ -157,7 +158,7 @@ void drawCheckPoint() {
     for(int i = 0; i < MaxCheck; i++) {
         if(i == 7/* && CheckP[i]->getNum() > 0*/) {
             //cout << (*CheckP[i])[0].pos.x << endl;
-            cout << "drawing line 7" << endl;
+            //cout << "drawing line 7" << endl;
         }
         CheckP[i]->draw();
     }
@@ -231,12 +232,12 @@ void drawVars() {
 
 void initButton() {
     for(int i = 0; i < 8; i++) {
-        btnList.push_back(Button(varX+nameBtnSpace, varY-i*varListHeight-0.01, arrow_left_normal));
+        btnList.push_back(Button(arrow_left_normal, varX+nameBtnSpace, varY-i*varListHeight-0.01, 0.06, 0.10667));
     }
     for(int i = 0; i < 8; i++) {
-        btnList.push_back(Button(varX+nameBtnSpace+nameBtnSpace2, varY-i*varListHeight-0.01, arrow_right_normal));
+        btnList.push_back(Button(arrow_right_normal, varX+nameBtnSpace+nameBtnSpace2, varY-i*varListHeight-0.01, 0.06, 0.10667));
     }
-    btnList.push_back(Button(0.5, -0.5, button_normal));
+    btnList.push_back(Button(button_normal, 0.5, -0.75, 0.2, 0.2));
     btnList[0].corspVar = &MinCheck;
     btnList[1].corspVar = &MaxCheck;
     btnList[2].corspVar = &MaxCustSingleLine;
@@ -282,20 +283,23 @@ void drawSerpQueue() {
     drawObject(_serpQueueLeft, Point(SQX+SQdX+2*SQdX_,SQY+SQdY+2*SQdY_), SQLRW, SQLRH);
     int i = 0;
     for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++) {
-        
         SerpQ[i].draw();
     }
     //cout << "drawing pass at" << SerpQ[1].pos.x << "." << SerpQ[1].pos.y << endl;
-    drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
+    if(i < SerpQ.getNum())
+        drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
     for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
         SerpQ[i].draw();
-    drawObject(_serpQueueLeft, Point(SQX+SQdX,SQY+SQdY), SQLRW, SQLRH);
+    if(i < SerpQ.getNum())
+        drawObject(_serpQueueLeft, Point(SQX+SQdX,SQY+SQdY), SQLRW, SQLRH);
     for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
         SerpQ[i].draw();
-    drawObject(_serpQueueDownU, Point(SQX,SQY), SQDW, SQDH);
-    for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
-        SerpQ[i].draw();
-    drawObject(_serpQueueDownL, Point(SQX,SQY), SQDW, SQDH);
+    if(i < SerpQ.getNum()) {
+        drawObject(_serpQueueDownU, Point(SQX,SQY), SQDW, SQDH);
+        for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
+            SerpQ[i].draw();
+        drawObject(_serpQueueDownL, Point(SQX,SQY), SQDW, SQDH);
+    }
 }
 
 
@@ -307,7 +311,7 @@ Point genSkew(Point base) {
 
 void genCPRoute(float x, float y) {
     for(int i = 0; i < MaxCustCheck+1; i++) {
-        route.push_back(Point(x-i*0.05, y-i*0.075));
+        route.push_back(Point(x-i*0.02, y-i*0.03));
         //cout << "x = " << x-i*0.05 << "; y = " << y-i*0.075 << endl;
     }
 }
@@ -425,7 +429,12 @@ void loadTexture() {
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
-    
+    texId[arrow_left_hover] = SOIL_load_OGL_texture(
+        ".\\source\\left_hover.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
     texId[arrow_left_pressed] = SOIL_load_OGL_texture(
         ".\\source\\left_pressed.png",
         SOIL_LOAD_AUTO,
@@ -439,7 +448,12 @@ void loadTexture() {
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
-    
+    texId[arrow_right_hover] = SOIL_load_OGL_texture(
+        ".\\source\\right_hover.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
     texId[arrow_right_pressed] = SOIL_load_OGL_texture(
         ".\\source\\right_pressed.png",
         SOIL_LOAD_AUTO,
@@ -448,21 +462,28 @@ void loadTexture() {
     );
     
     texId[button_normal] = SOIL_load_OGL_texture(
-        ".\\source\\normal.png",
+        ".\\source\\button_normal.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     
     texId[button_hover] = SOIL_load_OGL_texture(
-        ".\\source\\hover.png",
+        ".\\source\\button_hover.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     
     texId[button_pressed] = SOIL_load_OGL_texture(
-        ".\\source\\pressed.png",
+        ".\\source\\button_pressed.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[initbg] = SOIL_load_OGL_texture(
+        ".\\source\\initbg.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB

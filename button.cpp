@@ -12,9 +12,9 @@ using namespace std;
 extern texName a;
 extern int texId[];
 
-Button::Button(float x, float y, texName name) {
+Button::Button(texName name, float x, float y, float width, float height) {
     pos.x = x; pos.y = y;
-    width = 0.07; height = 0.1;
+    this->width = width; this->height = height;
     texId = ::texId[name];
     initId = texId;
     cout << ::texId[name] << endl;

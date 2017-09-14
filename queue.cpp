@@ -31,6 +31,10 @@ Passenger& Queue::getFirstPassenger() {
     return q[0];
 }
 
+Passenger& Queue::getLastPassenger() {
+    return q[q.size()-1];
+}
+
 int Queue::getNum() {
     return q.size();
 }

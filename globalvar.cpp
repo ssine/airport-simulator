@@ -16,7 +16,7 @@ int onDuty = 0;
 int offDuty = 1;
 int pause = 2;
 int closed = 3;
-time_t t_unit = 2000;
+time_t t_unit = 200;
 
 int MaxCustNum;
 
