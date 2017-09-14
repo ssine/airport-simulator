@@ -52,7 +52,7 @@ void run() {
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
-		int c = rand() % 30;
+		int c = rand() % 2;
 		for (int i = 0; i<c; i++)
 			PassengerG.addSingle();
 			
