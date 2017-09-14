@@ -168,6 +168,8 @@ void drawVars() {
     glRasterPos2f(varX + nameVarSpace, varY);
     sprintf(s, "%d", MinCheck);
     drawString(s);   //输出的字符串
+	
+	
 
     glRasterPos2f(varX, varY-1*varListHeight);
     sprintf(s, "MaxCheck");
@@ -259,10 +261,12 @@ void mouseMotion(int x, int y) {
     }
 }
 
+
 void mouseClick(int btn, int state, int x, int y) {
     for(int i = 0; i < btnList.size(); i++) {
         btnList[i].mouseClick(btn, state, x, y);
     }
+
 }
 
 
