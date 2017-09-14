@@ -13,6 +13,8 @@
 #include "globalvar.h"
 #include "button.h"
 
+#include <mutex>
+
 #include "glyph.h"
 #include "passenger.h"
 #include "serpqueue.h"
@@ -34,17 +36,20 @@ const char* windowTitle = "测试样例";
 
 extern CheckPoint* CheckP[];
 
+std::mutex view_mutex;
+
+
 extern texName a;
 int texId[300];
 
 std::vector<Point> route;
 // 每排&每斜线人数
 // passenger纹理总数
-int passengerTexNum = 5;
+int passengerTexNum = 10;
 
 
 // 控制FPS
-int FPS = 60;
+int FPS = 1000;
 int timeInterval;
 
 
@@ -137,6 +142,7 @@ void flush(int value) {
         // 图形
 
         // 移动队列中所有乘客并绘制
+        std::lock_guard<std::mutex> lock(view_mutex);
         for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
         drawSerpQueue();
         for(int i = 0; i < MaxCheck; i++) {
@@ -144,6 +150,7 @@ void flush(int value) {
                 (*(CheckP[i]))[j].move();
         }
         drawCheckPoint();
+
 
     }
 
@@ -317,18 +324,19 @@ void genCPRoute(float x, float y) {
 }
 
 void genRoute() {
-    Point base(SQX + 88*lmd, SQY + 66*lmd);
-    float step = 1144*1.0/(MaxCustSingleLine+1)*lmd;
+    Point base(SQX + 88*lmd, SQY + 75*lmd);
+    float step = 1050*1.0/(MaxCustSingleLine+1)*lmd;
     //cout << lmd;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step/*+step/2*/, base.y));
     step = -step;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step-step, base.y));
     step = -step;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step-step, base.y));
     step = -step;
+    base.x += 0.01;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
 
 

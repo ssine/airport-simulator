@@ -56,7 +56,7 @@ void CheckPoint::refreshPopTime() {
     {
         //popPassenger();
 		if(!isempty())
-        nextPopTime=getTime()+getFirstPassenger().checkTime;
+        nextPopTime=getTime()+getFirstPassenger().checkTime*10;
     }
 }
 
