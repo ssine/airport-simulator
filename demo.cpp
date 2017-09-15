@@ -75,7 +75,7 @@ void run() {
 			SerpQ.getLastPassenger().routeId = curFreeRtp;
 			if (curFreeRtp < MaxCustNum - 1) {
 				curFreeRtp++;
-				cout << "++!  " << curFreeRtp << endl;
+				//cout << "++!  " << curFreeRtp << endl;
 			}
 			RestA.popPassenger();
 		}
@@ -93,7 +93,7 @@ void run() {
 			for (int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
 			if (curFreeRtp > 0) {
 				curFreeRtp--;
-				cout << "--!  " << curFreeRtp << endl;
+				//cout << "--!  " << curFreeRtp << endl;
 			}
 			//cout << CheckP[7]->getNum() << endl;
 		}

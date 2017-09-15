@@ -35,6 +35,7 @@ void Passenger::move() {
     //cout << "using id" << routeId << endl;
     //pos = route[routeId];
     //cout <<routeId << "moved to " << pos.x << "." << pos.y << "this:" << this <<  endl;
+	cout << &route << endl;
     pos.x += sym(pos.x, route[routeId].x) * step;
     pos.y += sym(pos.y, route[routeId].y) * step;
     
