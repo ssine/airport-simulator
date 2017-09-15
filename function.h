@@ -21,6 +21,8 @@ void clearLogFile();
 
 void writeLogFile(std::string s);
 
+void writeLogFile(std::string s);
+
 int distribution(CheckPoint* CheckP[]);
 
 void refreshCheckPoint(CheckPoint* CheckP[]);
@@ -31,4 +33,8 @@ int getCheckNum(CheckPoint* CheckP[]);
 
 void makeSwitchCheckPoint(CheckPoint* CheckP[], int op);//开关安检口
 
-void programEnd();//下班
+void makeCheckPointPause(CheckPoint* CheckP[], int CheckId);
+
+void makeCheckPointEndPause(CheckPoint* CheckP[], int CheckId);
+
+void programEnd(CheckPoint* CheckP[], SerpQueue* SerpQ);//下班

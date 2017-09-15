@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <string>
 #include "view.h"
 
 #include <ctime>
@@ -24,7 +25,7 @@ using namespace std;
 
 PassengerGenerator PassengerG;
 CheckPoint* CheckP[20];
-
+char storeNum[25];
 
 void run();
 
@@ -34,36 +35,45 @@ int main(int argc, char *argv[])
 	t1.detach();
 	cout << "you see me?";
 	//readSettingFile();
-	while(!aniWindow) ;
+	while (!aniWindow);
 	run();
 	return 0;
 }
 
 void run() {
-	for (int i = 0; i<MaxCheck; i++)
+	clearLogFile();
+	for (int i = 0; i < MaxCheck; i++)
 	{
-		if (i<MinCheck)
+		if (i < MinCheck)
+		{
 			CheckP[i]->start();
+			writeLogFile(to_string(i) + string("checkpoint is opened"));
+		}
 		else
+		{
 			CheckP[i]->shut();
+			//writeLogFile(to_string(i) + string("号安检口关闭"));
+			writeLogFile(to_string(i) + string("checkpoint is closed"));
+		}
 	}
 	RestArea RestA;
-	
+
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
 		int c = rand() % 2;
-		for (int i = 0; i<c; i++)
+		for (int i = 0; i < c; i++)
 			PassengerG.addSingle();
-			
+
 		//休息区to蛇形队列
 		//cerr << RestA.isempty()<<endl;
 		while (!SerpQ.isFull() && !RestA.isempty())
 		{
 			//cerr <<"2"<< RestA.isempty() << endl;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
+			writeLogFile(to_string(RestA.getFirstPassenger().id) + string(" passenger enters the queuing buffer"));
 			SerpQ.getLastPassenger().routeId = curFreeRtp;
-			if(curFreeRtp < MaxCustNum - 1) {
+			if (curFreeRtp < MaxCustNum - 1) {
 				curFreeRtp++;
 				cout << "++!  " << curFreeRtp << endl;
 			}
@@ -76,11 +86,12 @@ void run() {
 		while (!SerpQ.isempty() && (checkId = distribution(CheckP)) != -1)
 		{
 			CheckP[checkId]->addPassenger(SerpQ.getFirstPassenger());
+			writeLogFile(to_string(SerpQ.getFirstPassenger().id) + string(" passengers to enter ") + to_string(checkId) + string(" checkpoint"));
 			//安检完就打死
 			CheckP[checkId]->refreshPopTime();
 			SerpQ.popPassenger();
-			for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
-			if(curFreeRtp > 0) {
+			for (int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
+			if (curFreeRtp > 0) {
 				curFreeRtp--;
 				cout << "--!  " << curFreeRtp << endl;
 			}
