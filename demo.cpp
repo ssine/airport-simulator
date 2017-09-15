@@ -60,16 +60,16 @@ void run() {
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
-		int c = rand() % 2;
+		int c = rand() % 3;
 		for (int i = 0; i < c; i++)
 			PassengerG.addSingle();
 
 		//休息区to蛇形队列
 		while (!SerpQ.isFull() && !RestA.isempty())
 		{
+			RestA.getFirstPassenger().routeId = curFreeRtp;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
 			writeLogFile(to_string(RestA.getFirstPassenger().id) + string(" passenger enters the queuing buffer"));
-			SerpQ.getLastPassenger().routeId = curFreeRtp;
 			if (curFreeRtp < MaxCustNum - 1) {
 				curFreeRtp++;
 			}

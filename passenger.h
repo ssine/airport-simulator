@@ -12,6 +12,7 @@ public:
     static int count;
     Passenger(int arriveTime, int checkTime);
     Passenger();
+    void draw();
     void move();
     void nextPoint();
 };

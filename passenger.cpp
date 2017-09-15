@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "passenger.h"
 #include <cstdlib>
+#include <cstdio>
 #include "view.h"
 #include <iostream>
 using namespace std;
@@ -43,4 +44,14 @@ void Passenger::move() {
 
 void Passenger::nextPoint() {
     if(routeId > 0) routeId--;
+}
+
+void Passenger::draw() {
+    Glyph::draw();
+
+    // char s[100];
+    // glColor3f(1.0f, 1.0f, 1.0f);     //设置字体颜色
+    // glRasterPos2f(pos.x, pos.y + height);
+    // sprintf(s, "%d", id);
+    // drawString(s);
 }

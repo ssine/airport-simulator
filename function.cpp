@@ -91,7 +91,7 @@ void writeLogFile(std::string s)
 {
 	std::fstream fout("Log.txt", std::ios::app);
 	fout << "time:" << getTime() / 2 << " ";
-	fout << s;
+	fout << s << "\n";
 }
 
 
