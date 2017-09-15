@@ -8,6 +8,7 @@
 #include "struct.h"
 #include "globalvar.h"
 #include <Windows.h>
+#include <string>
 extern time_t t_unit;
 
 time_t getTime()
@@ -88,8 +89,9 @@ void clearLogFile()
 
 void writeLogFile(std::string s)
 {
-    std::fstream fout("Log.txt",std::ios::app);
-    fout<<s;
+	std::fstream fout("Log.txt", std::ios::app);
+	fout << "time:" << getTime() / 2 << " ";
+	fout << s;
 }
 
 
@@ -193,6 +195,7 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 			if (CheckP[i]->getState() == closed)
 			{
 				CheckP[i]->start();
+				writeLogFile(std::to_string(i) + std::string(" checkpoint is opened"));
 				return;
 			}
 		}
@@ -204,6 +207,7 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 			if (CheckP[i]->getState() == onDuty)
 			{
 				CheckP[i]->shut();
+				writeLogFile(std::to_string(i) + std::string(" checkpoint is closed"));
 				return;
 			}
 		}
@@ -211,7 +215,19 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 	return;
 }
 
-void programEnd(CheckPoint* CheckP[])
+void makeCheckPointPause(CheckPoint* CheckP[], int CheckId)
+{
+	CheckP[CheckId]->toPause();
+	writeLogFile((char)(CheckId - '0') + std::string("checkpoint begins to pause"));
+}
+
+void makeCheckPointEndPause(CheckPoint* CheckP[], int CheckId)
+{
+	CheckP[CheckId]->start();
+	writeLogFile((char)(CheckId - '0') + std::string("Checkpoint end pause"));
+}
+
+void programEnd(CheckPoint* CheckP[],SerpQueue* SerpQ)
 {
 	for (int i = 0; i<MaxCheck; i++)
 	{
@@ -223,6 +239,7 @@ void programEnd(CheckPoint* CheckP[])
 		for (int i = 0; i<MaxCheck; i++)
 		{
 			sum += CheckP[i]->getNum();
+			sum += SerpQ->getNum();
 		}
 		if (!sum)
 			exit(0);

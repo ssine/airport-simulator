@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="button.h" />
     <ClInclude Include="checkpoint.h" />
+    <ClInclude Include="EventGenerator.h" />
     <ClInclude Include="function.h" />
     <ClInclude Include="globalvar.h" />
     <ClInclude Include="glyph.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="checkpoint.cpp" />
     <ClCompile Include="demo.cpp" />
+    <ClCompile Include="EventGenerator.cpp" />
     <ClCompile Include="function.cpp" />
     <ClCompile Include="globalvar.cpp" />
     <ClCompile Include="glyph.cpp" />
