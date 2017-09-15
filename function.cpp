@@ -193,7 +193,6 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 			if (CheckP[i]->getState() == closed)
 			{
 				CheckP[i]->start();
-				//cout << i << "is start" << endl;
 				return;
 			}
 		}
@@ -205,7 +204,6 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 			if (CheckP[i]->getState() == onDuty)
 			{
 				CheckP[i]->shut();
-				//cout << i << "is shut" << endl;
 				return;
 			}
 		}

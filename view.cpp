@@ -13,7 +13,6 @@
 #include "globalvar.h"
 #include "button.h"
 
-#include <mutex>
 
 #include "glyph.h"
 #include "passenger.h"
@@ -36,7 +35,6 @@ const char* windowTitle = "测试样例";
 
 extern CheckPoint* CheckP[];
 
-std::mutex view_mutex;
 
 
 extern texName a;
@@ -49,7 +47,7 @@ int passengerTexNum = 10;
 
 
 // 控制FPS
-int FPS = 1000;
+int FPS = 60;
 int timeInterval;
 
 
@@ -104,7 +102,6 @@ void show() {
 void drawInit() {
     // 必要的数值计算
     lmd = alp / sqdw;
-    //cout << lmd << endl;
     SQDW=lmd*sqdw, SQDH=lmd*sqdh*alph, SQLRW=lmd*sqlrw, SQLRH=lmd*sqlrh*alph;
     SQdX=lmd*dltx, SQdY=lmd*dlty*alph, SQdX_=lmd*dltx_, SQdY_=lmd*dlty_*alph;
 
@@ -142,7 +139,6 @@ void flush(int value) {
         // 图形
 
         // 移动队列中所有乘客并绘制
-        std::lock_guard<std::mutex> lock(view_mutex);
         for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
         drawSerpQueue();
         for(int i = 0; i < MaxCheck; i++) {
@@ -155,7 +151,6 @@ void flush(int value) {
     }
 
     glutSwapBuffers();
-    //cout << "flushed!" << endl;
     if(aniWindow) glutTimerFunc(timeInterval, flush, 1);
     else glutTimerFunc(timeInterval, flush, 0);
 }
@@ -163,10 +158,6 @@ void flush(int value) {
 
 void drawCheckPoint() {
     for(int i = 0; i < MaxCheck; i++) {
-        if(i == 7/* && CheckP[i]->getNum() > 0*/) {
-            //cout << (*CheckP[i])[0].pos.x << endl;
-            //cout << "drawing line 7" << endl;
-        }
         CheckP[i]->draw();
     }
 }
@@ -292,7 +283,6 @@ void drawSerpQueue() {
     for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++) {
         SerpQ[i].draw();
     }
-    //cout << "drawing pass at" << SerpQ[1].pos.x << "." << SerpQ[1].pos.y << endl;
     if(i < SerpQ.getNum())
         drawObject(_serpQueueRight, Point(SQX+SQdX+SQdX_,SQY+SQdY+SQdY_), SQLRW, SQLRH);
     for(int j = 0; j < MaxCustSingleLine + MaxCustSingleSkew && i < SerpQ.getNum(); j++, i++)
@@ -319,14 +309,12 @@ Point genSkew(Point base) {
 void genCPRoute(float x, float y) {
     for(int i = 0; i < MaxCustCheck+1; i++) {
         route.push_back(Point(x-i*0.02, y-i*0.03));
-        //cout << "x = " << x-i*0.05 << "; y = " << y-i*0.075 << endl;
     }
 }
 
 void genRoute() {
     Point base(SQX + 88*lmd, SQY + 75*lmd);
     float step = 1050*1.0/(MaxCustSingleLine+1)*lmd;
-    //cout << lmd;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
     base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step/*+step/2*/, base.y));
     step = -step;
@@ -341,16 +329,11 @@ void genRoute() {
 
 
     std::reverse(route.begin(),route.end());
-    // cout << route.size();
-    // for(int i = 0; i < route.size(); i++) 
-    //     cout << route[i].x << endl;
     MaxCustNum = route.size();
 
     for(int i = 0; i < MaxCheck; i++) {
         genCPRoute(-0.7 + i*0.22, -0.05);
     }
-
-    cout << "MaxCustNum=" << MaxCustNum << "  all pt=" << route.size() << endl;
 
 }
 
@@ -361,7 +344,6 @@ void drawObject(texName name, Point& pos, float width=0.0, float height=0.0) {
 
     glEnable(GL_TEXTURE_2D);//图像有效化
     glBindTexture( GL_TEXTURE_2D, texId[name] );
-    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
     glEnable(GL_ALPHA_TEST);//试描画开始
     glAlphaFunc(GL_GREATER, 0.5);
 	glBegin(GL_POLYGON);
@@ -386,9 +368,7 @@ void onEscPressed(unsigned char key, int x, int y) {
 
 int getPassengerTexId() {
     srand(clock());
-    //int id = int(rand()*1.0*passengerTexNum/RAND_MAX+1);
     int id = (clock() % passengerTexNum)+1;
-    //cout << "id:" << id << "  time:" << clock() <<  endl;
     return id;
 }
 
@@ -503,14 +483,12 @@ void loadPassengerTex() {
     char s[200];
     for(int i = 1; i <= passengerTexNum; i++) {
         sprintf(s, ".\\source\\p%d.png", i);
-        //cout << s << endl;
         int st = SOIL_load_OGL_texture(
             s,
             SOIL_LOAD_AUTO,
             i,
             SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
         );
-        //cout << st << endl;
     }
 }
 

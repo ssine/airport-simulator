@@ -17,7 +17,6 @@ bool Glyph::mouseIn(int x, int y) {
 void Glyph::draw() {
     glEnable(GL_TEXTURE_2D);//图像有效化
     glBindTexture( GL_TEXTURE_2D, texId );
-    //cout << name << ' ' << pos.x << ' ' << pos.y << ' ' << width << ' ' << height << endl;
     glEnable(GL_ALPHA_TEST);//试描画开始
     glAlphaFunc(GL_GREATER, 0.5);
 	glBegin(GL_POLYGON);
@@ -28,5 +27,4 @@ void Glyph::draw() {
 	glEnd();
 	glDisable(GL_ALPHA_TEST);//试描画结束
     glDisable(GL_TEXTURE_2D);//图像无效
-    //cout << texId << endl;
 }

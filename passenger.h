@@ -11,6 +11,7 @@ public:
 	bool isMuslim;
     static int count;
     Passenger(int arriveTime, int checkTime);
+    Passenger();
     void move();
     void nextPoint();
 };

@@ -46,7 +46,7 @@ int CheckPoint::getState() {
 void CheckPoint::refreshNum() {
     if(!isempty()&&getTime()>nextPopTime) {
         popPassenger();
-        for(int i = 0; i < q.size(); i++)
+        for(int i = front; i != rear; i = (i+1)%500)
             q[i].routeId--;
     }
 }
@@ -70,10 +70,8 @@ void CheckPoint::addPassenger(Passenger p) {
     p.routeId = MaxCustNum+1+id*(MaxCustCheck+1) + getNum();
     if(p.routeId > MaxCustNum+(id+1)*(MaxCustCheck+1)) {
         p.routeId = MaxCustNum+(id+1)*(MaxCustCheck+1);
-        cout << "?????????????????????????????" << endl;
     }
-    //cout << "routeId changed to " << p.routeId <<endl;
-    q.push_back(p);
+    Queue::addPassenger(p);
 }
 
 CheckPoint::CheckPoint() {
@@ -86,12 +84,8 @@ CheckPoint::CheckPoint() {
 
 void CheckPoint::draw() {
     this->Glyph::draw();
-    //if(getState() == offDuty || getState() == closed) return;
     for(int i = 0; i < this->getNum(); i++) {
         (*this)[i].draw();
-        //cout << "routeid = " << (*this)[i].routeId << endl;
-        //cout << (*this)[i].pos.x << " " << (*this)[i].pos.y << endl;
     }
-    //cout << this->getNum() << "passengers drawn " << endl;
 }
 

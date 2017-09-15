@@ -17,8 +17,6 @@ Button::Button(texName name, float x, float y, float width, float height) {
     this->width = width; this->height = height;
     texId = ::texId[name];
     initId = texId;
-    cout << ::texId[name] << endl;
-    cout << "constructured!" <<endl;
 }
 
 void Button::mouseMove(int x, int y) {

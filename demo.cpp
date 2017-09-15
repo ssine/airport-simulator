@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
 {
 	thread t1(show);
 	t1.detach();
-	cout << "you see me?";
 	//readSettingFile();
 	while(!aniWindow) ;
 	run();
@@ -52,20 +51,17 @@ void run() {
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
-		int c = rand() % 2;
+		int c = rand() % 5;
 		for (int i = 0; i<c; i++)
 			PassengerG.addSingle();
 			
 		//休息区to蛇形队列
-		//cerr << RestA.isempty()<<endl;
 		while (!SerpQ.isFull() && !RestA.isempty())
 		{
-			//cerr <<"2"<< RestA.isempty() << endl;
 			SerpQ.addPassenger(RestA.getFirstPassenger());
 			SerpQ.getLastPassenger().routeId = curFreeRtp;
 			if(curFreeRtp < MaxCustNum - 1) {
 				curFreeRtp++;
-				//cout << "++!  " << curFreeRtp << endl;
 			}
 			RestA.popPassenger();
 		}
@@ -82,9 +78,7 @@ void run() {
 			for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].nextPoint();
 			if(curFreeRtp > 0) {
 				curFreeRtp--;
-				//cout << "--!  " << curFreeRtp << endl;
 			}
-			//cout << CheckP[7]->getNum() << endl;
 		}
 		int nowCheckNum = getCheckNum(CheckP);
 		int switchC = whetherSwitchCheckPoint(SerpQ, nowCheckNum);
