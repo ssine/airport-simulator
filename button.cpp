@@ -12,6 +12,8 @@ using namespace std;
 extern texName a;
 extern int texId[];
 
+extern CheckPoint* CheckP[20];
+
 Button::Button(texName name, float x, float y, float width, float height) {
     pos.x = x; pos.y = y;
     this->width = width; this->height = height;
@@ -39,6 +41,8 @@ void Button::mouseClick(int btn, int state, int x, int y) {
         } else if(texId == ::texId[arrow_right_normal] + 2) {
             *corspVar += 1;
             writeSettingFile();
+        } else if(texId == ::texId[playAndPause_normal] + 2) {
+			switchCheckPointState(CheckP, corspCP);
         }
     }
 }

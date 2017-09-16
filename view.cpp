@@ -69,7 +69,11 @@ float nameBtnSpace = 0.53;
 float nameBtnSpace2 = 0.3;
 float varListHeight = 0.2;
 
+extern float CPInterval;
+extern float CPBaseX, CPBaseY;
+
 std::vector<Button> btnList;
+std::vector<Button> aniBtnList;
 
 void drawString(const char* str);
 void selectFont(int size, int charset, const char* face);
@@ -138,14 +142,18 @@ void flush(int value) {
     } else {
         // 图形
         drawObject(anibg, Point(-1.0, -1.0), 2.0, 2.0);
+        
+        //drawObject(playAndPause_normal, Point(-1.0, -1.0), 2.0, 2.0);
         // 移动队列中所有乘客并绘制
         for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
-        drawSerpQueue();
         for(int i = 0; i < MaxCheck; i++) {
             for(int j = 0; j < CheckP[i]->getNum(); j++)
-                (*(CheckP[i]))[j].move();
+            (*(CheckP[i]))[j].move();
         }
         drawCheckPoint();
+        drawSerpQueue();
+
+        drawButton();
 
 
     }
@@ -253,24 +261,39 @@ void initButton() {
     btnList[14].corspVar = &MaxCustCheck;
     btnList[15].corspVar = &MaxSec;
 
+    for(int i = 0; i < MaxCheck; i++) {
+        aniBtnList.push_back(Button(playAndPause_normal, CPBaseX+0.05+i*CPInterval, CPBaseY+0.6, 0.06, 0.10667));
+        aniBtnList[i].corspCP = i;
+    }
+
+
 }
 
 void drawButton() {
-    for(auto btn : btnList) {
-        btn.draw();
+    if(aniWindow) {
+        for(auto btn : aniBtnList) {
+            btn.draw();
+            cout << "pause btn drawn!" << endl;
+        }
+    } else {
+        for(auto btn : btnList) btn.draw();
     }
 }
 
 void mouseMotion(int x, int y) {
-    for(int i = 0; i < btnList.size(); i++) {
-        btnList[i].mouseMove(x, y);
+    if(aniWindow) {
+        for(int i = 0; i < aniBtnList.size(); i++) aniBtnList[i].mouseMove(x, y);
+    } else {
+        for(int i = 0; i < btnList.size(); i++) btnList[i].mouseMove(x, y);
     }
 }
 
 
-void mouseClick(int btn, int state, int x, int y) {
-    for(int i = 0; i < btnList.size(); i++) {
-        btnList[i].mouseClick(btn, state, x, y);
+void mouseClick(int mbtn, int state, int x, int y) {
+    if(aniWindow) {
+        for(int i = 0; i < aniBtnList.size(); i++) aniBtnList[i].mouseClick(mbtn, state, x, y);
+    } else {
+        for(int i = 0; i < btnList.size(); i++) btnList[i].mouseClick(mbtn, state, x, y);
     }
 
 }
@@ -484,8 +507,36 @@ void loadTexture() {
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
     
-    texId[block] = SOIL_load_OGL_texture(
-        ".\\source\\block.png",
+    texId[CPblock] = SOIL_load_OGL_texture(
+        ".\\source\\CPblock.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[CPpause] = SOIL_load_OGL_texture(
+        ".\\source\\CPpause.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[playAndPause_normal] = SOIL_load_OGL_texture(
+        ".\\source\\playAndPause_normal.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[playAndPause_hover] = SOIL_load_OGL_texture(
+        ".\\source\\playAndPause_hover.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[playAndPause_pressed] = SOIL_load_OGL_texture(
+        ".\\source\\playAndPause_pressed.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB

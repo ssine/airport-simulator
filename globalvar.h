@@ -13,10 +13,6 @@ extern int MaxCustCheck;
 extern int MaxSec;
 extern int MaxRestNum;
 extern time_t t_unit;
-extern int onDuty;
-extern int offDuty;
-extern int pause;
-extern int closed;
 extern int distributionMethod;
 extern int MaxCustNum;
 
@@ -34,5 +30,11 @@ typedef enum textureName
     arrow_left_normal, arrow_left_hover, arrow_left_pressed,
     arrow_right_normal, arrow_right_hover, arrow_right_pressed,
     button_normal, button_hover, button_pressed,
-    initbg, anibg, block
+    initbg, anibg, CPblock, CPpause,
+    playAndPause_normal, playAndPause_hover, playAndPause_pressed
 }texName;
+
+typedef enum checkPointState
+{
+    onDuty, offDuty, pause, closed
+} CPState;
