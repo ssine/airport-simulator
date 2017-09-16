@@ -9,8 +9,11 @@ public:
     int getCustSingleLine();
     int getLineNum();
     bool isFull();
+	bool isclosed();
+	void shut();
 private:
     int custSingleLine, lineNum;
+	bool closed=false;
 };
 
 #endif 

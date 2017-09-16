@@ -61,11 +61,12 @@ void run() {
 	while (true)
 	{
 		int c = rand() % 3;
+		if(!SerpQ.isclosed())
 		for (int i = 0; i < c; i++)
 			PassengerG.addSingle();
 
 		//休息区to蛇形队列
-		while (!SerpQ.isFull() && !RestA.isempty())
+		while (!SerpQ.isFull() && !SerpQ.isclosed() && !RestA.isempty())
 		{
 			Passenger curp = Passenger(RestA.getFirstPassenger().arriveTime, RestA.getFirstPassenger().checkTime, true);
 			curp.routeId = curFreeRtp;

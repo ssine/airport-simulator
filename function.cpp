@@ -235,22 +235,20 @@ void switchCheckPointState(CheckPoint* CheckP[], int CheckId)
 	}
 }
 
-void programEnd(CheckPoint* CheckP[],SerpQueue* SerpQ)
+void programEnd(CheckPoint* CheckP[], SerpQueue* SerpQ)
 {
-	for (int i = 0; i<MaxCheck; i++)
-	{
-		CheckP[i]->shut();
-	}
-	int sum = 0;
-	while (true)
-	{
+	if (SerpQ->getNum() <= 0)
 		for (int i = 0; i<MaxCheck; i++)
 		{
+			CheckP[i]->shut();
+		}
+	SerpQ->shut();
+	int sum = 0;
+		for (int i = 0; i < MaxCheck; i++)
+		{
 			sum += CheckP[i]->getNum();
-			sum += SerpQ->getNum();
+			//sum += SerpQ->getNum();
 		}
 		if (!sum)
 			exit(0);
-		Sleep(t_unit);
-	}
 }

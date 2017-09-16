@@ -17,7 +17,15 @@ bool SerpQueue::isFull() {
     return getNum() >= MaxCustNum;
 }
 
+bool SerpQueue::isclosed()
+{
+	return closed;
+}
 
+void SerpQueue::shut()
+{
+	closed = true;
+}
 
 bool RestArea::isFull() {
     return getNum() >= MaxRestNum;
