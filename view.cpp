@@ -137,7 +137,7 @@ void flush(int value) {
         drawButton();
     } else {
         // 图形
-
+        drawObject(anibg, Point(-1.0, -1.0), 2.0, 2.0);
         // 移动队列中所有乘客并绘制
         for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
         drawSerpQueue();
@@ -472,6 +472,20 @@ void loadTexture() {
 
     texId[initbg] = SOIL_load_OGL_texture(
         ".\\source\\initbg.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[anibg] = SOIL_load_OGL_texture(
+        ".\\source\\anibg.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+    texId[block] = SOIL_load_OGL_texture(
+        ".\\source\\block.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB

@@ -84,8 +84,12 @@ CheckPoint::CheckPoint() {
 
 void CheckPoint::draw() {
     this->Glyph::draw();
+    if(state == closed) {
+        //cout << "close pic drawn" << endl;
+        drawObject(block, Point(pos.x+0.05, pos.y+height), 0.07, 0.12);
+    }
     for(int i = 0; i < this->getNum(); i++) {
-        (*this)[i].draw();
+        if(i == 0) (*this)[i].draw(true);
+        else (*this)[i].draw(false);
     }
 }
-

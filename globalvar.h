@@ -34,5 +34,5 @@ typedef enum textureName
     arrow_left_normal, arrow_left_hover, arrow_left_pressed,
     arrow_right_normal, arrow_right_hover, arrow_right_pressed,
     button_normal, button_hover, button_pressed,
-    initbg
+    initbg, anibg, block
 }texName;

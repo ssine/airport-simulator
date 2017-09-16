@@ -154,7 +154,7 @@ int distribution(CheckPoint* CheckP[])
 void refreshCheckPoint(CheckPoint* CheckP[])
 {
     for(int i=0;i<MaxCheck;i++)
-        if(CheckP[i]->getState()==onDuty)
+		if(CheckP[i]->getState()==onDuty||CheckP[i]->getState()==closed)
             {
                 CheckP[i]->refreshNum();
             }

@@ -20,8 +20,8 @@ inline float sym(float a, float b) {
 
 int Passenger::count = 0;
 
-Passenger::Passenger(int arriveTime, int checkTime) {
-    id = count++;
+Passenger::Passenger(int arriveTime, int checkTime, bool giveid) {
+    if(giveid) id = count++;
     this->arriveTime = arriveTime;
     this->checkTime = checkTime;
 
@@ -46,12 +46,14 @@ void Passenger::nextPoint() {
     if(routeId > 0) routeId--;
 }
 
-void Passenger::draw() {
+void Passenger::draw(bool showNum) {
     Glyph::draw();
 
-    // char s[100];
-    // glColor3f(1.0f, 1.0f, 1.0f);     //设置字体颜色
-    // glRasterPos2f(pos.x, pos.y + height);
-    // sprintf(s, "%d", id);
-    // drawString(s);
+    if(showNum) {
+        char s[100];
+        glColor3f(1.0f, 1.0f, 1.0f);     //设置字体颜色
+        glRasterPos2f(pos.x, pos.y + height);
+        sprintf(s, "%d", id);
+        drawString(s);
+    }
 }
