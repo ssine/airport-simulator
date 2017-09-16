@@ -20,6 +20,7 @@ int MaxCustNum;
 int curFreeRtp = 0;
 // 打开动画
 bool aniWindow = false;
+bool initFinished = false;
 
 SerpQueue SerpQ;
 

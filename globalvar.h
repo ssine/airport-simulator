@@ -19,6 +19,7 @@ extern int MaxCustNum;
 extern int curFreeRtp;
 // 打开动画
 extern bool aniWindow;
+extern bool initFinished;
 
 extern SerpQueue SerpQ;
 
@@ -31,7 +32,8 @@ typedef enum textureName
     arrow_right_normal, arrow_right_hover, arrow_right_pressed,
     button_normal, button_hover, button_pressed,
     initbg, anibg, CPblock, CPpause,
-    playAndPause_normal, playAndPause_hover, playAndPause_pressed
+    playAndPause_normal, playAndPause_hover, playAndPause_pressed,
+    gooff_normal, gooff_hover, gooff_pressed
 }texName;
 
 typedef enum checkPointState

@@ -10,8 +10,9 @@
 using namespace std;
 
 int CheckPoint::num = 0;
-float CPInterval = 0.22;
-float CPBaseX = -0.8, CPBaseY = -0.05;
+float CPInterval = 0.15;
+float CPBaseX = -0.70, CPBaseY = -0.15;
+float CPWidth = 0.135, CPHeight = 0.35;
 
 void CheckPoint::start() {
     if(state != offDuty) {
@@ -31,7 +32,7 @@ void CheckPoint::toPause(time_t pauseTime)
 	{
 		state = pause;
 		nextPopTime += pauseTime;
-		pauseEndTime = getTime() + pauseTime*2;
+		pauseEndTime = getTime() + pauseTime*10;
 	}
 }
 
@@ -47,11 +48,12 @@ void CheckPoint::refreshNum() {
 	if (state == pause&&getTime() > pauseEndTime)
 	{
 		state = onDuty;
-	}
-    if(!isempty()&&getTime()>nextPopTime) {
-        popPassenger();
-        for(int i = front; i != rear; i = (i+1)%500)
+	} else if(state == onDuty) {
+        if(!isempty()&&getTime()>nextPopTime) {
+            popPassenger();
+            for(int i = front; i != rear; i = (i+1)%500)
             q[i].routeId--;
+        }
     }
 }
 
@@ -80,7 +82,7 @@ void CheckPoint::addPassenger(Passenger p) {
 
 CheckPoint::CheckPoint() {
     id = num++;
-    width = 0.175; height = 0.5;
+    width = CPWidth; height = CPHeight;
     texId = ::texId[_checkPoint];
     pos.x = CPBaseX + id*CPInterval;
     pos.y = CPBaseY;

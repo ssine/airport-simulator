@@ -103,6 +103,22 @@ void show() {
     glutMainLoop();
 }
 
+void delayedVarInit(int var) {
+    if(aniWindow) {
+        for(int i = 0; i < MaxCheck; i++) CheckP[i] = new CheckPoint();
+        // 生成乘客路径点
+        genRoute();
+        for(int i = 0; i < MaxCheck; i++) {
+            aniBtnList.push_back(Button(playAndPause_normal, CPBaseX+0.06+i*CPInterval, CPBaseY+0.7, 0.06, 0.10667));
+            aniBtnList[i].corspCP = i;
+        }
+        aniBtnList.push_back(Button(gooff_normal, 0.7, -0.9, 0.3, 0.2));
+        initFinished = true;
+    } else {
+        glutTimerFunc(1, delayedVarInit, 0);
+    }
+}
+
 void drawInit() {
     // 必要的数值计算
     lmd = alp / sqdw;
@@ -112,10 +128,7 @@ void drawInit() {
     // 读取材质
     loadTexture();
 
-    for(int i = 0; i < MaxCheck; i++) CheckP[i] = new CheckPoint();
-
-    // 生成乘客路径点
-    genRoute();
+    glutTimerFunc(1, delayedVarInit, 0);
 
     // 生成按钮
     initButton();
@@ -250,7 +263,7 @@ void initButton() {
     for(int i = 0; i < 8; i++) {
         btnList.push_back(Button(arrow_right_normal, varX+nameBtnSpace+nameBtnSpace2, varY-i*varListHeight-0.01, 0.06, 0.10667));
     }
-    btnList.push_back(Button(button_normal, 0.5, -0.75, 0.2, 0.2));
+    btnList.push_back(Button(button_normal, 0.5, -0.80, 0.3, 0.23));
     btnList[0].corspVar = &MinCheck;
     btnList[1].corspVar = &MaxCheck;
     btnList[2].corspVar = &MaxCustSingleLine;
@@ -267,11 +280,6 @@ void initButton() {
     btnList[13].corspVar = &EasySeqLen;
     btnList[14].corspVar = &MaxCustCheck;
     btnList[15].corspVar = &MaxSec;
-
-    for(int i = 0; i < MaxCheck; i++) {
-        aniBtnList.push_back(Button(playAndPause_normal, CPBaseX+0.06+i*CPInterval, CPBaseY+0.7, 0.06, 0.10667));
-        aniBtnList[i].corspCP = i;
-    }
 
 
 }
@@ -361,7 +369,7 @@ void genRoute() {
     MaxCustNum = route.size();
 
     for(int i = 0; i < MaxCheck; i++) {
-        genCPRoute(-0.7 + i*0.22, -0.05);
+        genCPRoute(CPBaseX + i*CPInterval + 0.05, CPBaseY + 0.03);
     }
 
 }
@@ -543,6 +551,27 @@ void loadTexture() {
 
     texId[playAndPause_pressed] = SOIL_load_OGL_texture(
         ".\\source\\playAndPause_pressed.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[gooff_normal] = SOIL_load_OGL_texture(
+        ".\\source\\gooff_normal.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[gooff_hover] = SOIL_load_OGL_texture(
+        ".\\source\\gooff_hover.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[gooff_pressed] = SOIL_load_OGL_texture(
+        ".\\source\\gooff_pressed.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB

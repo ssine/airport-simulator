@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
 {
 	thread t1(show);
 	t1.detach();
-	//readSettingFile();
-	while (!aniWindow);
+	readSettingFile();
+	while (!initFinished);
 	run();
 	return 0;
 }

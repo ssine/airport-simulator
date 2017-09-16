@@ -43,6 +43,8 @@ void Button::mouseClick(int btn, int state, int x, int y) {
             writeSettingFile();
         } else if(texId == ::texId[playAndPause_normal] + 2) {
 			switchCheckPointState(CheckP, corspCP);
+        } else if(texId == ::texId[gooff_normal] + 2) {
+            programEnd(CheckP, corspCP);
         }
     }
 }

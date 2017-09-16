@@ -23,7 +23,7 @@ void readSettingFile()
 {
     std::ifstream fin("para.dat",std::ios::binary);
     int *a=new int[10];
-    fin.read((char *)a,sizeof(a));
+    fin.read((char *)a,sizeof(a)*8);
     MinCheck=a[0];
     MaxCheck=a[1];
     MaxCustSingleLine=a[2];
@@ -48,7 +48,7 @@ void writeSettingFile()
     a[5]=EasySeqLen;
     a[6]=MaxCustCheck;
     a[7]=MaxSec;
-    fout.write((char *)a,sizeof(a));
+    fout.write((char *)a,sizeof(a)*8);
     fout.close();
     delete a;
 }
