@@ -13,7 +13,7 @@ void PassengerGenerator::addPassenger(int num)
 	int arrTime, checkTime;
 	for (int i = 0; i<num; i++)
 	{
-		arrTime = rand() % 300;
+		arrTime = getTime()+rand() % 20;
 		checkTime = rand() % MaxSec;
 		RestPoint->addPassenger(arrTime, checkTime);
 	}

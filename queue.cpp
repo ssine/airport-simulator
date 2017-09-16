@@ -4,6 +4,7 @@
 #include <string>
 #include <random>
 #include <ctime>
+#include <algorithm>
 #include "queue.h"
 #include "struct.h"
 #include "passenger.h"
@@ -16,7 +17,7 @@ int maxVecNum = 500;
 Queue::Queue() {
     front = rear = num = 0;
     for(int i = 0; i < maxVecNum; i++)
-        q.push_back(Passenger());
+        q.push_back(Passenger(0x3f3f3f,0));
 }
 
 Passenger& Queue::operator[](int n) {
@@ -38,6 +39,7 @@ void Queue::addPassenger(int arriveTime, int checkTime) {
 	else
 		pass.isMuslim = false;
     q[rear] = pass;
+	queueSort();
     rear = (rear + 1) % maxVecNum;
     num++;
 }
@@ -62,4 +64,9 @@ int Queue::getNum() {
 bool Queue::isempty()
 {
     return num == 0;
+}
+
+void Queue::queueSort()
+{
+	sort(q.begin(), q.end(), [](Passenger& a, Passenger& b) -> bool { return a.arriveTime < b.arriveTime; });
 }

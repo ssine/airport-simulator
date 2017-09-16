@@ -5,7 +5,7 @@
 #include "queue.h"
 #include "globalvar.h"
 #include "stdafx.h"
-
+#include "function.h"
 
 class PassengerGenerator
 {
