@@ -33,8 +33,6 @@ int getCheckNum(CheckPoint* CheckP[]);
 
 void makeSwitchCheckPoint(CheckPoint* CheckP[], int op);//开关安检口
 
-void makeCheckPointPause(CheckPoint* CheckP[], int CheckId);
-
-void makeCheckPointEndPause(CheckPoint* CheckP[], int CheckId);
+void switchCheckPointState(CheckPoint* CheckP[], int CheckId);
 
 void programEnd(CheckPoint* CheckP[], SerpQueue* SerpQ);//下班

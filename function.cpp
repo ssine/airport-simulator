@@ -215,16 +215,18 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 	return;
 }
 
-void makeCheckPointPause(CheckPoint* CheckP[], int CheckId)
+void switchCheckPointState(CheckPoint* CheckP[], int CheckId)
 {
-	CheckP[CheckId]->toPause();
-	writeLogFile((char)(CheckId - '0') + std::string("checkpoint begins to pause"));
-}
-
-void makeCheckPointEndPause(CheckPoint* CheckP[], int CheckId)
-{
-	CheckP[CheckId]->start();
-	writeLogFile((char)(CheckId - '0') + std::string("Checkpoint end pause"));
+	if (CheckP[CheckId]->getState() == onDuty)
+	{
+		CheckP[CheckId]->toPause();
+		writeLogFile((char)(CheckId - '0') + std::string("checkpoint begins to pause"));
+	}
+	else
+	{
+		CheckP[CheckId]->start();
+		writeLogFile((char)(CheckId - '0') + std::string("Checkpoint end pause"));
+	}
 }
 
 void programEnd(CheckPoint* CheckP[],SerpQueue* SerpQ)
