@@ -25,6 +25,7 @@ using namespace std;
 
 PassengerGenerator PassengerG;
 CheckPoint* CheckP[20];
+RestArea RestA;
 char storeNum[25];
 
 void run();
@@ -55,7 +56,6 @@ void run() {
 			writeLogFile(to_string(i) + string("checkpoint is closed"));
 		}
 	}
-	RestArea RestA;
 
 	PassengerG.setRestArea(&RestA);
 	while (true)

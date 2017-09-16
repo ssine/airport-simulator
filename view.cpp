@@ -31,10 +31,10 @@ int curWindowWidth = 1366;
 int curWindowHeight = 768;
 
 // 窗口名称
-const char* windowTitle = "测试样例";
+const char* windowTitle = "杀虫灭菌安检口";
 
 extern CheckPoint* CheckP[];
-
+extern RestArea RestA;
 
 
 extern texName a;
@@ -154,7 +154,7 @@ void flush(int value) {
         drawSerpQueue();
 
         drawButton();
-
+        drawRestAreaNum();
 
     }
 
@@ -236,6 +236,13 @@ void drawVars() {
 
 }
 
+void drawRestAreaNum() {
+    char s[100];
+    glRasterPos2f(-1.0, -0.5);
+    sprintf(s, "%d", RestA.getNum());
+    drawString(s);   //输出的字符串
+}
+
 void initButton() {
     for(int i = 0; i < 8; i++) {
         btnList.push_back(Button(arrow_left_normal, varX+nameBtnSpace, varY-i*varListHeight-0.01, 0.06, 0.10667));
@@ -262,7 +269,7 @@ void initButton() {
     btnList[15].corspVar = &MaxSec;
 
     for(int i = 0; i < MaxCheck; i++) {
-        aniBtnList.push_back(Button(playAndPause_normal, CPBaseX+0.05+i*CPInterval, CPBaseY+0.6, 0.06, 0.10667));
+        aniBtnList.push_back(Button(playAndPause_normal, CPBaseX+0.06+i*CPInterval, CPBaseY+0.7, 0.06, 0.10667));
         aniBtnList[i].corspCP = i;
     }
 
@@ -273,7 +280,6 @@ void drawButton() {
     if(aniWindow) {
         for(auto btn : aniBtnList) {
             btn.draw();
-            cout << "pause btn drawn!" << endl;
         }
     } else {
         for(auto btn : btnList) btn.draw();

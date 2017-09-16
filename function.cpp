@@ -11,6 +11,9 @@
 #include <string>
 extern time_t t_unit;
 
+using namespace std;
+
+
 time_t getTime()
 {
     return clock()/t_unit;
@@ -154,10 +157,10 @@ int distribution(CheckPoint* CheckP[])
 void refreshCheckPoint(CheckPoint* CheckP[])
 {
     for(int i=0;i<MaxCheck;i++)
-		if(CheckP[i]->getState()==onDuty||CheckP[i]->getState()==closed)
-            {
+		//if(CheckP[i]->getState()==onDuty||CheckP[i]->getState()==closed)
+           // {
                 CheckP[i]->refreshNum();
-            }
+           // }
 		/*else if(CheckP[i]->getState()==pause)
 		{
 			
@@ -222,6 +225,7 @@ void switchCheckPointState(CheckPoint* CheckP[], int CheckId)
 	if (CheckP[CheckId]->getState() == onDuty)
 	{
 		CheckP[CheckId]->toPause(rand()%MaxSec);
+		cout << &CheckP[CheckId] << " has paused" << endl;
 		writeLogFile((char)(CheckId - '0') + std::string("checkpoint begins to pause"));
 	}
 	else

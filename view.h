@@ -45,6 +45,7 @@ void initButton();
 void drawObject(texName, Point&, float, float);
 void drawSerpQueue();
 void drawCheckPoint();
+void drawRestAreaNum();
 void flush(int value);
 
 // 从文件读取材质
