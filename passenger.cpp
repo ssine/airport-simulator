@@ -47,7 +47,11 @@ void Passenger::nextPoint() {
 }
 
 void Passenger::draw(bool showNum) {
-    Glyph::draw();
+    if(isMuslim) {
+        drawObject(muslim, pos, 0.2, 0.2);
+    } else {
+        Glyph::draw();
+    }
 
     if(showNum) {
         char s[100];

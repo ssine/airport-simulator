@@ -577,6 +577,14 @@ void loadTexture() {
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
 
+    texId[muslim] = SOIL_load_OGL_texture(
+        ".\\source\\muslim.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+    
+
 }
 
 void loadPassengerTex() {

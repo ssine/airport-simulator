@@ -33,7 +33,8 @@ typedef enum textureName
     button_normal, button_hover, button_pressed,
     initbg, anibg, CPblock, CPpause,
     playAndPause_normal, playAndPause_hover, playAndPause_pressed,
-    gooff_normal, gooff_hover, gooff_pressed
+    gooff_normal, gooff_hover, gooff_pressed,
+    muslim
 }texName;
 
 typedef enum checkPointState
