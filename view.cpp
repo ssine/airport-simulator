@@ -71,6 +71,7 @@ float varListHeight = 0.2;
 
 extern float CPInterval;
 extern float CPBaseX, CPBaseY;
+extern float CPWidth, CPHeight;
 
 std::vector<Button> btnList;
 std::vector<Button> aniBtnList;
@@ -112,7 +113,7 @@ void delayedVarInit(int var) {
             aniBtnList.push_back(Button(playAndPause_normal, CPBaseX+0.06+i*CPInterval, CPBaseY+0.7, 0.06, 0.10667));
             aniBtnList[i].corspCP = i;
         }
-        aniBtnList.push_back(Button(gooff_normal, 0.7, -0.9, 0.3, 0.2));
+        aniBtnList.push_back(Button(gooff_normal, 0.7, -1.0, 0.3, 0.25));
         initFinished = true;
     } else {
         glutTimerFunc(1, delayedVarInit, 0);
@@ -163,6 +164,7 @@ void flush(int value) {
             for(int j = 0; j < CheckP[i]->getNum(); j++)
             (*(CheckP[i]))[j].move();
         }
+        drawObject(cp_muslim, Point(CPBaseX + 10*CPInterval, CPBaseY), CPWidth+0.05, CPHeight+0.26);
         drawCheckPoint();
         drawSerpQueue();
 
@@ -579,6 +581,13 @@ void loadTexture() {
 
     texId[muslim] = SOIL_load_OGL_texture(
         ".\\source\\muslim.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[cp_muslim] = SOIL_load_OGL_texture(
+        ".\\source\\cp_muslim.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB

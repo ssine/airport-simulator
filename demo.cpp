@@ -68,7 +68,7 @@ void run() {
 		//休息区to蛇形队列
 		while (!SerpQ.isFull() && !SerpQ.isclosed() && !RestA.isempty())
 		{
-			Passenger curp = Passenger(RestA.getFirstPassenger().arriveTime, RestA.getFirstPassenger().checkTime, true);
+			Passenger curp = Passenger(RestA.getFirstPassenger().arriveTime, RestA.getFirstPassenger().checkTime, true, RestA.getFirstPassenger().isMuslim);
 			curp.routeId = curFreeRtp;
 			SerpQ.addPassenger(curp);
 			//cout << "passenger added!" << endl;
