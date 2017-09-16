@@ -65,7 +65,7 @@ void run() {
 			PassengerG.addSingle();
 
 		//休息区to蛇形队列
-		while (!SerpQ.isFull() && !RestA.isempty()&& RestA.getFirstPassenger().arriveTime>getTime())
+		while (!SerpQ.isFull() && !RestA.isempty())
 		{
 			Passenger curp = Passenger(RestA.getFirstPassenger().arriveTime, RestA.getFirstPassenger().checkTime, true);
 			curp.routeId = curFreeRtp;

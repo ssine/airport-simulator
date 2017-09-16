@@ -17,7 +17,6 @@ public:
     bool isempty();
     Passenger& operator[](int n);
     Queue();
-	void queueSort();
 protected:
     int front, rear, num;
     std::vector<Passenger> q; //乘客队列;
