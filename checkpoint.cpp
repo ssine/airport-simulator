@@ -25,13 +25,13 @@ void CheckPoint::toPause()
 		state = pause;
 }
 
-void CheckPoint::toPause(int pauseTime)
+void CheckPoint::toPause(time_t pauseTime)
 {
 	if (state != offDuty && state != closed)
 	{
-		state = offDuty;
+		state = pause;
 		nextPopTime += pauseTime;
-		pauseEndTime = getTime() + pauseTime;
+		pauseEndTime = getTime() + pauseTime*2;
 	}
 }
 
@@ -44,6 +44,10 @@ int CheckPoint::getState() {
 }
 
 void CheckPoint::refreshNum() {
+	if (state == pause&&getTime() > pauseEndTime)
+	{
+		state = onDuty;
+	}
     if(!isempty()&&getTime()>nextPopTime) {
         popPassenger();
         for(int i = front; i != rear; i = (i+1)%500)

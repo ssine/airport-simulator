@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ctime>
 #include "queue.h"
 #include "globalvar.h"
 #include "glyph.h"
@@ -9,7 +10,7 @@ class CheckPoint : public Queue, public Glyph
 public:
     CheckPoint();
 	void toPause();
-    void toPause(int pauseTime);  //暂停
+    void toPause(time_t pauseTime);  //暂停
     void start();  //开始
     int getState();   //获取安检口状态
     void setState(int s);
@@ -25,5 +26,5 @@ private:
     int id;
     int state;  //  关闭 : 0     打开 : 1
     int nextPopTime=0;
-    int pauseEndTime;
+    time_t pauseEndTime;
 };

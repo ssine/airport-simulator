@@ -158,15 +158,17 @@ void refreshCheckPoint(CheckPoint* CheckP[])
             {
                 CheckP[i]->refreshNum();
             }
-		else if(CheckP[i]->getState()==pause)
+		/*else if(CheckP[i]->getState()==pause)
 		{
-			CheckP[i]->nextPopTime += t_unit;
-		}
+			
+		}*/
 }
 
 //开放或关闭窗口 1开-1关0不动
 int whetherSwitchCheckPoint(SerpQueue &SerpQ, const int nowCheckNum)
 {
+	if (!nowCheckNum)
+		return 0;
 	int num = SerpQ.getNum() / nowCheckNum;
 	if (num>MaxCheck)
 		return 1;
@@ -219,7 +221,7 @@ void switchCheckPointState(CheckPoint* CheckP[], int CheckId)
 {
 	if (CheckP[CheckId]->getState() == onDuty)
 	{
-		CheckP[CheckId]->toPause();
+		CheckP[CheckId]->toPause(rand()%MaxSec);
 		writeLogFile((char)(CheckId - '0') + std::string("checkpoint begins to pause"));
 	}
 	else
