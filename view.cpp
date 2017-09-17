@@ -166,10 +166,9 @@ void flush(int value) {
             (*(CheckP[i]))[j].move();
         }
         for(int i = 0; i < muslimQ.getNum(); i++) {
-            Point cur = muslimQ[i].pos;
             muslimQ[i].move();
-            if(cur == muslimQ[i].pos) muslimQ.popPassenger();
         }
+        if(muslimQ.getNum() > 0 && muslimQ[0].pos.x > 0.75) muslimQ.popPassenger();
         drawObject(cp_muslim, Point(CPBaseX + 10*CPInterval, CPBaseY), CPWidth+0.05, CPHeight+0.26);
         drawCheckPoint();
         drawSerpQueue();
