@@ -33,6 +33,7 @@ int curWindowHeight = 768;
 // 窗口名称
 const char* windowTitle = "杀虫灭菌安检口";
 
+// 用到的数据结构
 extern CheckPoint* CheckP[];
 extern RestArea RestA;
 extern SerpQueue muslimQ;
@@ -55,7 +56,7 @@ int timeInterval;
 float alp = 1.5, alph = 1.2; // 蛇形队列 单位宽度 & 高度修正量
 float lmd;
 
-// 蛇形队列的各项数值……请无视
+// 绘图各项参数
 float SQX = -1.0, SQY = -1.0;
 int sqdw = 1289, sqdh = 256, sqlrw = 1243, sqlrh = 165;
 int dltx = 135, dltx_ = 87, dlty = 167, dlty_ = 76;
@@ -150,15 +151,18 @@ void flush(int value) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if(value == 0) {
-        // 变量编辑
+        // 变量编辑界面
+
+        // 背景
         drawObject(initbg, Point(-1.0, -1.0), 2.0, 2.0);
+        
+        // 绘制变量和按钮
         drawVars();
         drawButton();
     } else {
         // 图形
         drawObject(anibg, Point(-1.0, -1.0), 2.0, 2.0);
         
-        //drawObject(playAndPause_normal, Point(-1.0, -1.0), 2.0, 2.0);
         // 移动队列中所有乘客并绘制
         for(int i = 0; i < SerpQ.getNum(); i++) SerpQ[i].move();
         for(int i = 0; i < MaxCheck; i++) {
@@ -263,6 +267,7 @@ void drawVars() {
 
 }
 
+// 绘制休息区人数
 void drawRestAreaNum() {
     char s[100];
     glRasterPos2f(-1.0, -0.5);
@@ -270,6 +275,8 @@ void drawRestAreaNum() {
     drawString(s);   //输出的字符串
 }
 
+
+// 初始化变量页面的按钮
 void initButton() {
     for(int i = 0; i < 9; i++) {
         btnList.push_back(Button(arrow_left_normal, varX+nameBtnSpace, varY-i*varListHeight-0.01, 0.06, 0.10667));
@@ -355,6 +362,8 @@ void drawSerpQueue() {
 }
 
 
+
+// 以下三个函数生成所有绘图路径点
 Point genSkew(Point base) {
     Point step = Point(90/(MaxCustSingleSkew+1)*lmd, 93/(MaxCustSingleSkew+1)*lmd*alph);
     for(int i = 1; i <= MaxCustSingleSkew; i++) route.push_back(base + step*i);
@@ -417,10 +426,8 @@ void onEscPressed(unsigned char key, int x, int y) {
 }
 
 
-// 辅助绘图
 
-
-
+// 在乘客被生成时赋予材质id
 int getPassengerTexId() {
     srand(clock());
     int id = (clock() % passengerTexNum)+1;
@@ -633,6 +640,7 @@ void loadTexture() {
 
 }
 
+// 单独读取乘客材质（循环，可以读任意多个）
 void loadPassengerTex() {
     char s[200];
     for(int i = 1; i <= passengerTexNum; i++) {
