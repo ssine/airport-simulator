@@ -16,33 +16,21 @@ EventGenerator::~EventGenerator()
 void EventGenerator::eventStart()
 {
 	srand((unsigned)time(NULL));
-	if (rand() % 100 < 90)
-	{
-		PG->addSingle();
-	}
-	else
+	if (rand() % 100 > 90)
 	{
 		int id = rand() % MaxCheck;
 		if (CheckP[id]->getState() == onDuty)
 			CheckP[id]->toPause(rand() % 20);
 	}
-	if (rand() % 100 == 100 && getTime() > 100)
+	if (rand() % 11 == 1 && getTime() > 100)
 	{
 		programEnd(CheckP,SerpQ);
 	}
 }
 
-void EventGenerator::setPassengerGenerator(PassengerGenerator *PG)
+void EventGenerator::set(PassengerGenerator *PG,CheckPoint **CheckP,SerpQueue *SerpQ)
 {
 	this->PG = PG;
-}
-
-void EventGenerator::setCheckPointArray(CheckPoint **CheckP)
-{
 	this->CheckP = CheckP;
-}
-
-void EventGenerator::setSerpQueue(SerpQueue *SerpQ)
-{
 	this->SerpQ = SerpQ;
 }

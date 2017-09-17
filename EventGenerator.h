@@ -11,15 +11,14 @@ using namespace std;
 class EventGenerator
 {
 private:
-	void eventStart();
+	
 	PassengerGenerator *PG;
 	CheckPoint **CheckP;
 	SerpQueue *SerpQ;
 public:
 	EventGenerator();
 	~EventGenerator();
-	void setPassengerGenerator(PassengerGenerator *PG); 
-	void setCheckPointArray(CheckPoint **CheckP);
-	void setSerpQueue(SerpQueue *SerpQ);
+	void eventStart();
+	void EventGenerator::set(PassengerGenerator *PG, CheckPoint **CheckP, SerpQueue *SerpQ);
 };
 

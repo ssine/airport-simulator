@@ -16,8 +16,9 @@ private:
 	time_t interval = 1000;
 	void addPassenger(int num);
 	//高斯分布自动生成,参数为均值，方差
-	void gauss(int mean, int variance);
+	
 public:
+	void gauss();
 	//设置与休息区的链接，传入指针
 	void setRestArea(RestArea *p);
 	void auto_start();

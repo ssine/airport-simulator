@@ -226,17 +226,20 @@ void switchCheckPointState(CheckPoint* CheckP[], int CheckId)
 	{
 		CheckP[CheckId]->toPause(rand()%MaxSec);
 		cout << &CheckP[CheckId] << " has paused" << endl;
-		writeLogFile((char)(CheckId - '0') + std::string("checkpoint begins to pause"));
+		writeLogFile((char)(CheckId - '0') + std::string(" checkpoint begins to pause"));
 	}
 	else
 	{
 		CheckP[CheckId]->start();
-		writeLogFile((char)(CheckId - '0') + std::string("Checkpoint end pause"));
+		writeLogFile((char)(CheckId - '0') + std::string(" Checkpoint end pause"));
 	}
 }
 
 void programEnd(CheckPoint* CheckP[], SerpQueue* SerpQ)
 {
+	isoffDuty = true;
+	MinCheck = 0;
+	EasySeqLen = 1;
 	if (SerpQ->getNum() <= 0)
 		for (int i = 0; i<MaxCheck; i++)
 		{

@@ -32,6 +32,8 @@ void Queue::addPassenger(Passenger pass) {
 }
 
 void Queue::addPassenger(int arriveTime, int checkTime) {
+	if (isoffDuty)
+		return;
     Passenger pass(arriveTime, checkTime);
 	srand((unsigned)time(NULL));
 	if(rand()%100<6)

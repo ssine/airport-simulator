@@ -15,20 +15,18 @@ void PassengerGenerator::addPassenger(int num)
 	{
 		arrTime = getTime()+rand() % 20;
 		checkTime = rand() % MaxSec;
+		//if(RestPoint->getNum()>=499)
+		//	continue;
 		RestPoint->addPassenger(arrTime, checkTime);
 	}
 }
-
-void PassengerGenerator::gauss(int mean = 5, int variance = 2)
+std::random_device rd;
+std::mt19937 gen(rd());
+std::normal_distribution<double> normal(3, 2);
+void PassengerGenerator::gauss()
 {
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::normal_distribution<double> normal(mean, variance);
-	while (m_AutoSwitch)
-	{
-		Sleep(interval);
+	if(getTime()%4==0)
 		addPassenger(normal(gen));
-	}
 }
 
 void PassengerGenerator::setRestArea(RestArea *p)

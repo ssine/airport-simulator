@@ -15,7 +15,7 @@ extern int MaxRestNum;
 extern time_t t_unit;
 extern int distributionMethod;
 extern int MaxCustNum;
-
+extern bool isoffDuty;
 extern int curFreeRtp;
 // 打开动画
 extern bool aniWindow;

@@ -13,6 +13,7 @@ int MaxCustCheck = 5;
 int MaxSec = 5;
 int MaxRestNum = 1000;
 int distributionMethod = 0;
+bool isoffDuty=false;
 time_t t_unit = 200;
 
 int MaxCustNum;

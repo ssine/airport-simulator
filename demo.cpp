@@ -17,10 +17,9 @@
 #include "function.h"
 #include "globalvar.h"
 #include "passengerGenerator.h"
-
+#include "EventGenerator.h"
 
 using namespace std;
-
 
 
 PassengerGenerator PassengerG;
@@ -28,6 +27,7 @@ CheckPoint* CheckP[20];
 RestArea RestA;
 SerpQueue muslimQ;
 char storeNum[25];
+
 
 void run();
 
@@ -61,12 +61,7 @@ void run() {
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
-
-		int c = rand() % 3;
-		if(!SerpQ.isclosed())
-		for (int i = 0; i < c; i++)
-			PassengerG.addSingle();
-
+		PassengerG.gauss();
 		//休息区to蛇形队列
 		while(!RestA.isempty() && RestA.getFirstPassenger().isMuslim) {
 			Passenger curp = Passenger(RestA.getFirstPassenger().arriveTime, RestA.getFirstPassenger().checkTime, true, RestA.getFirstPassenger().isMuslim);
