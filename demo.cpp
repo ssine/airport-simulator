@@ -22,6 +22,7 @@
 using namespace std;
 
 
+EventGenerator EventG;
 PassengerGenerator PassengerG;
 CheckPoint* CheckP[20];
 RestArea RestA;
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
 
 void run() {
 	clearLogFile();
+	EventG.set(&PassengerG, CheckP, &SerpQ);
 	for (int i = 0; i < MaxCheck; i++)
 	{
 		if (i < MinCheck)
@@ -61,6 +63,7 @@ void run() {
 	PassengerG.setRestArea(&RestA);
 	while (true)
 	{
+		EventG.eventStart();
 		PassengerG.gauss();
 		//休息区to蛇形队列
 		while(!RestA.isempty() && RestA.getFirstPassenger().isMuslim) {

@@ -15,14 +15,13 @@ EventGenerator::~EventGenerator()
 
 void EventGenerator::eventStart()
 {
-	srand((unsigned)time(NULL));
 	if (rand() % 100 > 90)
 	{
 		int id = rand() % MaxCheck;
 		if (CheckP[id]->getState() == onDuty)
 			CheckP[id]->toPause(rand() % 20);
 	}
-	if (rand() % 11 == 1 && getTime() > 100)
+	if (rand() % 256 == 1 && getTime() > 300)
 	{
 		programEnd(CheckP,SerpQ);
 	}

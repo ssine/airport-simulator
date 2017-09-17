@@ -32,7 +32,7 @@ void CheckPoint::toPause(time_t pauseTime)
 	{
 		state = pause;
 		nextPopTime += pauseTime;
-		pauseEndTime = getTime() + pauseTime*10;
+		pauseEndTime = getTime() + pauseTime*2;
 	}
 }
 

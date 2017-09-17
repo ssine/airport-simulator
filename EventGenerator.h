@@ -7,7 +7,6 @@
 #include "queue.h"
 
 using namespace std;
-
 class EventGenerator
 {
 private:
