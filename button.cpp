@@ -5,6 +5,7 @@
 #include "view.h"
 #include <GL/glut.h>
 #include "globalvar.h"
+#include "passengerGenerator.h"
 
 #include <iostream>
 using namespace std;
@@ -13,6 +14,7 @@ extern texName a;
 extern int texId[];
 
 extern CheckPoint* CheckP[20];
+extern PassengerGenerator PassengerG;
 
 Button::Button(texName name, float x, float y, float width, float height) {
     pos.x = x; pos.y = y;
@@ -36,7 +38,7 @@ void Button::mouseClick(int btn, int state, int x, int y) {
 		if (texId == ::texId[button_normal] + 2) {
 			aniWindow = true;
 		} else if(texId == ::texId[arrow_left_normal] + 2) {
-            if(*corspVar > 1) *corspVar -= 1;
+            if(*corspVar > 0) *corspVar -= 1;
             writeSettingFile();
         } else if(texId == ::texId[arrow_right_normal] + 2) {
             *corspVar += 1;
@@ -45,6 +47,8 @@ void Button::mouseClick(int btn, int state, int x, int y) {
 			switchCheckPointState(CheckP, corspCP);
         } else if(texId == ::texId[gooff_normal] + 2) {
             programEnd(CheckP, &SerpQ);
+        } else if(texId == ::texId[plus_normal] + 2) {
+            PassengerG.addSingle();
         }
     }
 }

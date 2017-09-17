@@ -35,7 +35,7 @@ const char* windowTitle = "杀虫灭菌安检口";
 
 extern CheckPoint* CheckP[];
 extern RestArea RestA;
-
+extern SerpQueue muslimQ;
 
 extern texName a;
 int texId[300];
@@ -63,7 +63,7 @@ float SQDW, SQDH, SQLRW, SQLRH;
 float SQdX, SQdY, SQdX_, SQdY_;
 
 
-float varX = -0.5, varY = 0.7;
+float varX = -0.5, varY = 0.75;
 float nameVarSpace = 0.7;
 float nameBtnSpace = 0.53;
 float nameBtnSpace2 = 0.3;
@@ -114,6 +114,7 @@ void delayedVarInit(int var) {
             aniBtnList[i].corspCP = i;
         }
         aniBtnList.push_back(Button(gooff_normal, 0.7, -1.0, 0.3, 0.25));
+        aniBtnList.push_back(Button(plus_normal, -0.9, -0.6, 0.1, 0.18));
         initFinished = true;
     } else {
         glutTimerFunc(1, delayedVarInit, 0);
@@ -163,6 +164,11 @@ void flush(int value) {
         for(int i = 0; i < MaxCheck; i++) {
             for(int j = 0; j < CheckP[i]->getNum(); j++)
             (*(CheckP[i]))[j].move();
+        }
+        for(int i = 0; i < muslimQ.getNum(); i++) {
+            Point cur = muslimQ[i].pos;
+            muslimQ[i].move();
+            if(cur == muslimQ[i].pos) muslimQ.popPassenger();
         }
         drawObject(cp_muslim, Point(CPBaseX + 10*CPInterval, CPBaseY), CPWidth+0.05, CPHeight+0.26);
         drawCheckPoint();
@@ -249,6 +255,13 @@ void drawVars() {
     sprintf(s, "%d", MaxSec);
     drawString(s);   //输出的字符串
 
+    glRasterPos2f(varX, varY-8*varListHeight);
+    sprintf(s, "distributionMethod");
+    drawString(s);
+    glRasterPos2f(varX + nameVarSpace, varY-8*varListHeight);
+    sprintf(s, "%d", distributionMethod);
+    drawString(s);   //输出的字符串
+
 }
 
 void drawRestAreaNum() {
@@ -259,13 +272,13 @@ void drawRestAreaNum() {
 }
 
 void initButton() {
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < 9; i++) {
         btnList.push_back(Button(arrow_left_normal, varX+nameBtnSpace, varY-i*varListHeight-0.01, 0.06, 0.10667));
     }
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < 9; i++) {
         btnList.push_back(Button(arrow_right_normal, varX+nameBtnSpace+nameBtnSpace2, varY-i*varListHeight-0.01, 0.06, 0.10667));
     }
-    btnList.push_back(Button(button_normal, 0.5, -0.80, 0.3, 0.23));
+    btnList.push_back(Button(button_normal, 0.55, -0.83, 0.3, 0.23));
     btnList[0].corspVar = &MinCheck;
     btnList[1].corspVar = &MaxCheck;
     btnList[2].corspVar = &MaxCustSingleLine;
@@ -274,14 +287,16 @@ void initButton() {
     btnList[5].corspVar = &EasySeqLen;
     btnList[6].corspVar = &MaxCustCheck;
     btnList[7].corspVar = &MaxSec;
-    btnList[8].corspVar = &MinCheck;
-    btnList[9].corspVar = &MaxCheck;
-    btnList[10].corspVar = &MaxCustSingleLine;
-    btnList[11].corspVar = &MaxLines;
-    btnList[12].corspVar = &MaxSeqLen;
-    btnList[13].corspVar = &EasySeqLen;
-    btnList[14].corspVar = &MaxCustCheck;
-    btnList[15].corspVar = &MaxSec;
+    btnList[8].corspVar = &distributionMethod;
+    btnList[9].corspVar = &MinCheck;
+    btnList[10].corspVar = &MaxCheck;
+    btnList[11].corspVar = &MaxCustSingleLine;
+    btnList[12].corspVar = &MaxLines;
+    btnList[13].corspVar = &MaxSeqLen;
+    btnList[14].corspVar = &EasySeqLen;
+    btnList[15].corspVar = &MaxCustCheck;
+    btnList[16].corspVar = &MaxSec;
+    btnList[17].corspVar = &distributionMethod;
 
 
 }
@@ -336,6 +351,8 @@ void drawSerpQueue() {
             SerpQ[i].draw();
         drawObject(_serpQueueDownL, Point(SQX,SQY), SQDW, SQDH);
     }
+    for(int i = 0; i < muslimQ.getNum(); i++)
+        muslimQ[i].draw();
 }
 
 
@@ -355,12 +372,12 @@ void genRoute() {
     Point base(SQX + 88*lmd, SQY + 75*lmd);
     float step = 1050*1.0/(MaxCustSingleLine+1)*lmd;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
-    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step/*+step/2*/, base.y));
+    base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step+step/2, base.y));
     step = -step;
     for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
     base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step-step, base.y));
     step = -step;
-    for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x+step/2+i*step, base.y));
+    for(int i = 0; i < MaxCustSingleLine; i++) route.push_back(Point(base.x/*+step/2*/+i*step, base.y));
     base = genSkew(Point(base.x+(MaxCustSingleLine-1)*step-step, base.y));
     step = -step;
     base.x += 0.01;
@@ -592,6 +609,27 @@ void loadTexture() {
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
     );
+
+    texId[plus_normal] = SOIL_load_OGL_texture(
+        ".\\source\\plus_normal.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[plus_hover] = SOIL_load_OGL_texture(
+        ".\\source\\plus_hover.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
+
+    texId[plus_pressed] = SOIL_load_OGL_texture(
+        ".\\source\\plus_pressed.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB
+    );
     
 
 }
@@ -646,3 +684,4 @@ Point::Point(const Point& p) { x = p.x; y = p.y; }
 Point& Point::operator = (const Point& p) { x = p.x; y = p.y; return *this; }
 Point Point::operator + (const Point& p) { return Point(x + p.x, y + p.y); }
 Point Point::operator * (const float m) { return Point(x*m, y*m); }
+bool Point::operator == (const Point& p) {return x == p.x && y == p.y; }
