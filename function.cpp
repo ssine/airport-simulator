@@ -33,7 +33,7 @@ void readSettingFile()
     MaxCustCheck=a[6];
     MaxSec=a[7];
     fin.close();
-    delete a;
+    delete[] a;
 }
 
 void writeSettingFile()
@@ -50,7 +50,7 @@ void writeSettingFile()
     a[7]=MaxSec;
     fout.write((char *)a,sizeof(a)*8);
     fout.close();
-    delete a;
+    delete[] a;
 }
 
 void rondomWriteInputFile()
@@ -74,7 +74,7 @@ void rondomWriteInputFile()
     }
     fin.write((char*)en,sizeof(en));
     fin.close();
-    delete en;
+    delete[] en;
 }
 
 void readInputFile(Entry *en)
