@@ -5,6 +5,8 @@
 #include "view.h"
 #include <GL/glut.h>
 #include "globalvar.h"
+#include "passengerGenerator.h"
+
 
 #include <iostream>
 using namespace std;
@@ -13,6 +15,9 @@ extern texName a;
 extern int texId[];
 
 extern CheckPoint* CheckP[20];
+extern PassengerGenerator PassengerG;
+
+
 //构造函数，构造按钮对象
 Button::Button(texName name, float x, float y, float width, float height) {
     pos.x = x; pos.y = y;
@@ -49,6 +54,8 @@ void Button::mouseClick(int btn, int state, int x, int y) {
 			switchCheckPointState(CheckP, corspCP);
         } else if(texId == ::texId[gooff_normal] + 2) {
             programEnd(CheckP, &SerpQ);
+        } else if(texId == ::texId[plus_normal] + 2) {
+            PassengerG.addSingle();
         }
     }
 }
