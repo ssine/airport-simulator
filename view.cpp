@@ -180,6 +180,11 @@ void flush(int value) {
         drawButton();
         drawRestAreaNum();
 
+        if(isoffDuty) {
+            glRasterPos2f(0.75, 0.75);
+            drawString("Off Duty!");
+        }
+
     }
 
     glutSwapBuffers();
@@ -269,10 +274,12 @@ void drawVars() {
 
 // 绘制休息区人数
 void drawRestAreaNum() {
+    glColor3f(0.0f, 0.0f, 0.0f);
     char s[100];
-    glRasterPos2f(-1.0, -0.5);
+    glRasterPos2f(-0.95, -0.2);
     sprintf(s, "%d", RestA.getNum());
     drawString(s);   //输出的字符串
+    glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 

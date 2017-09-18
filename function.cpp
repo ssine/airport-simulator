@@ -195,7 +195,7 @@ void makeSwitchCheckPoint(CheckPoint* CheckP[], int op)
 {
 	if (op == 1)
 	{
-		for (int i = MinCheck - 1; i<MaxCheck; i++)
+		for (int i = max(MinCheck - 1, 0); i<MaxCheck; i++)
 		{
 			if (CheckP[i]->getState() == closed)
 			{

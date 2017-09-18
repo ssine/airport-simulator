@@ -48,7 +48,7 @@ void CheckPoint::refreshNum() {
 	if (state == pause&&getTime() > pauseEndTime)
 	{
 		state = onDuty;
-	} else/* if(state == onDuty)*/ {
+	} else if(state == onDuty || state == closed) {
         if(!isempty()&&getTime()>nextPopTime) {
             popPassenger();
             for(int i = front; i != rear; i = (i+1)%500)
